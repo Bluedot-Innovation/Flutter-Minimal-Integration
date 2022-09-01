@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android.iml" filepath="$PROJECT_DIR$/.idea/modules/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/809588748/android.permission_handler.iml" filepath="$PROJECT_DIR$/.idea/modules/809588748/android.permission_handler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/809588748/android.permission_handler.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/809588748/android.permission_handler.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/809588748/android.permission_handler.main.iml" filepath="$PROJECT_DIR$/.idea/modules/809588748/android.permission_handler.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/809588748/android.permission_handler.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/809588748/android.permission_handler.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-17554356/android.pointsdk_flutter_plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/-17554356/android.pointsdk_flutter_plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-17554356/android.pointsdk_flutter_plugin.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/-17554356/android.pointsdk_flutter_plugin.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-17554356/android.pointsdk_flutter_plugin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-17554356/android.pointsdk_flutter_plugin.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-17554356/android.pointsdk_flutter_plugin.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/-17554356/android.pointsdk_flutter_plugin.unitTest.iml" />
+    </modules>
+  </component>
+</project>
