@@ -1,13 +1,16 @@
 PODS:
   - bluedot_point_sdk (1.0.0):
-    - BluedotPointSDK
+    - BluedotPointSDK (= 15.6.4)
     - Flutter
   - BluedotPointSDK (15.6.4)
   - Flutter (1.0.0)
+  - permission_handler_apple (9.0.4):
+    - Flutter
 
 DEPENDENCIES:
   - bluedot_point_sdk (from `.symlinks/plugins/bluedot_point_sdk/ios`)
   - Flutter (from `Flutter`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
 
 SPEC REPOS:
   trunk:
@@ -18,12 +21,15 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/bluedot_point_sdk/ios"
   Flutter:
     :path: Flutter
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
 
 SPEC CHECKSUMS:
-  bluedot_point_sdk: c30254aba5a434dcc644d8de362874be550eb655
+  bluedot_point_sdk: d29580c4789e54c46cb4be7acfe97812e4cceee7
   BluedotPointSDK: cfd2a0c60867f93c838099803db6d8a1dca6388b
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
 
-PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
+PODFILE CHECKSUM: c4525f35062982f4f64c2021d28673c1b00fb42a
 
 COCOAPODS: 1.11.3

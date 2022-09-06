@@ -1,6 +1,9 @@
-import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'geo_triggering_page.dart';
+import 'home_page.dart';
 import 'initial_page.dart';
+import 'tempo_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,31 +13,28 @@ class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold();
-  }
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  final _bluedotPointSdk = BluedotPointSdk();
+  @override
 
-  Future<bool> isInitialized(BuildContext context) async {
-    var isInitialized = await _bluedotPointSdk.isInitialized();
-    return isInitialized;
+  void initState() {
+    super.initState();
+    // Request permissions for location and notification
+    Permission.locationWhenInUse.request();
+    Permission.notification.request();
   }
 
   @override
   Widget build(BuildContext context) {
-    isInitialized(context).then((value) {
-      if (value) {
-        // Navigator.push(context, ""),
-      }
-    });
     return MaterialApp(
-      home: InitialPage(),
+      home: const InitialPage(),
+      routes: {
+        '/home': (context) => const HomePage(),
+        '/geo-triggering': (context) => const GeoTriggeringPage(),
+        '/tempo': (context) => const TempoPage(),
+      },
     );
   }
 }
