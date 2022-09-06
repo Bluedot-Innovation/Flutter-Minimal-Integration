@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Flutter Minimal App',
       home: const InitialPage(),
       routes: {
         '/home': (context) => const HomePage(),

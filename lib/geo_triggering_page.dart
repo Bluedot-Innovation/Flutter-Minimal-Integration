@@ -14,13 +14,15 @@ class GeoTriggeringPage extends StatefulWidget {
 
 class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   bool _isGeoTriggeringRunning = false;
-  final geoTriggeringEventChannel = const MethodChannel(BluedotPointSdk.GEO_TRIGGERING); // Method channel to listen to geo triggering events
+  final geoTriggeringEventChannel = const MethodChannel(BluedotPointSdk.geoTriggering); // Method channel to listen to geo triggering events
 
   /// Start Geo triggering in iOS and Android (background mode)
   void _startGeoTriggering() {
     BluedotPointSdk.instance.geoTriggeringBuilder().start().then((value) {
+      // Successfully started geo triggering
       _updateGeoTriggeringStatus();
     }).catchError((error) {
+      // Failed to start geo triggering, handle error in here
       String errorMessage = error.toString();
       if (error is PlatformException) {
         errorMessage = error.message!;
@@ -49,7 +51,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
           // Handle successful start of geo-triggering
       _updateGeoTriggeringStatus();
     }).catchError((error) {
-      // Handle failed start of geo-triggering
+      // Handle failed start of geo-triggering, handle error in here
       String errorMessage = error.toString();
       if (error is PlatformException) {
         errorMessage = error.message!;
@@ -62,8 +64,10 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   /// Stop Geo-Triggering
   void _stopGeoTriggering() {
     BluedotPointSdk.instance.stopGeoTriggering().then((value) {
+      // Successfully stop geo triggering
       _updateGeoTriggeringStatus();
     }).catchError((error) {
+      // Failed to stop geo triggering, handle error in here
       String errorMessage = error.toString();
       if (error is PlatformException) {
         errorMessage = error.message!;
@@ -91,13 +95,13 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
     geoTriggeringEventChannel.setMethodCallHandler((MethodCall call) async {
       var args = call.arguments;
       switch (call.method) {
-        case "onZoneInfoUpdate":
+        case GeoTriggeringEvents.onZoneInfoUpdate:
           debugPrint("On Zone Info Update: $args");
           break;
-        case "didEnterZone":
+        case GeoTriggeringEvents.didEnterZone:
           debugPrint("Did Enter Zone: $args");
           break;
-        case "didExitZone":
+        case GeoTriggeringEvents.didExitZone:
           debugPrint("Did Exit Zone: $args");
           break;
         default:

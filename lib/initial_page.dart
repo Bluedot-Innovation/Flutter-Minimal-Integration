@@ -13,13 +13,13 @@ class InitialPage extends StatefulWidget {
 class _InitialPageState extends State<InitialPage> {
   final textFieldController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final _serviceMethodChannel = const MethodChannel(BluedotPointSdk.BLUEDOT_SERVICE); // Method channel to listen to bluedot service events
+  final _serviceMethodChannel = const MethodChannel(BluedotPointSdk.bluedotService); // Method channel to listen to bluedot service events
 
   void _initialize() async {
     if (_formKey.currentState!.validate()) {
       var projectId = textFieldController.text;
 
-      // Initialize project with provided [projectId]
+      // Initialize project with the provided [projectId]
       BluedotPointSdk.instance.initialize(projectId).then((value) {
         // Handle successful initialization
         Navigator.pushNamed(context, '/home');
@@ -42,8 +42,18 @@ class _InitialPageState extends State<InitialPage> {
     _serviceMethodChannel.setMethodCallHandler((MethodCall call) async {
       var args = call.arguments;
       switch (call.method) {
-        case "onBluedotServiceError":
+        case BluedotServiceEvents.onBluedotServiceError:
           debugPrint("On Bluedot Service Error: $args");
+          break;
+          // iOS-only events
+        case BluedotServiceEvents.locationAuthorizationDidChange:
+          debugPrint("Location Authorization Did Change: $args");
+          break;
+        case BluedotServiceEvents.lowPowerModeDidChange:
+          debugPrint("Low Power Mode Did Change: $args");
+          break;
+        case BluedotServiceEvents.accuracyAuthorizationDidChange:
+          debugPrint("Accuracy Authorization Did Change: $args");
           break;
         default:
           break;

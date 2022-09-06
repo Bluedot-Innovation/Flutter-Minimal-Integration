@@ -13,12 +13,13 @@ class TempoPage extends StatefulWidget {
 class _TempoPageState extends State<TempoPage> {
   final textFieldController = TextEditingController();
   final _tempoFormKey = GlobalKey<FormState>();
-  final tempoEventChannel = const MethodChannel(BluedotPointSdk.TEMPO); // Method channel to listen to tempo events
+  final tempoEventChannel = const MethodChannel(BluedotPointSdk.tempo); // Method channel to listen to tempo events
   bool _isTempoRunning = false;
 
   /// Start tempo tracking
   void _startTempo() {
     if (_tempoFormKey.currentState!.validate()) {
+
       String channelId = 'Bluedot Flutter';
       String channelName = 'Bluedot Flutter';
       String androidNotificationTitle = 'Bluedot Foreground Service - Tempo';
@@ -42,8 +43,10 @@ class _TempoPageState extends State<TempoPage> {
               androidNotificationContent, androidNotificationId)
           .start(destinationId)
           .then((value) {
+            // Successfully started tempo tracking
         _updateTempoStatus();
       }).catchError((error) {
+        // Failed to start tempo tracking, handle error here
         String errorMessage = error.toString();
         if (error is PlatformException) {
           errorMessage = error.message!;
@@ -56,8 +59,10 @@ class _TempoPageState extends State<TempoPage> {
   /// Stop tempo tracking
   void _stopTempo() {
     BluedotPointSdk.instance.stopTempoTracking().then((value) {
+      // Successfully stopped tempo tracking
       _updateTempoStatus();
     }).catchError((error) {
+      // Failed to stop tempo tracking, handle error here
       String errorMessage = error.toString();
       if (error is PlatformException) {
         errorMessage = error.message!;
@@ -84,7 +89,7 @@ class _TempoPageState extends State<TempoPage> {
     tempoEventChannel.setMethodCallHandler((MethodCall call) async {
       var args = call.arguments;
       switch (call.method) {
-        case "tempoTrackingStoppedWithError":
+        case TempoEvents.tempoTrackingDidStopWithError:
           debugPrint("TempoTrackingStoppedWithError: $args");
           break;
         default:
