@@ -43,17 +43,17 @@ class _InitialPageState extends State<InitialPage> {
       var args = call.arguments;
       switch (call.method) {
         case BluedotServiceEvents.onBluedotServiceError:
-          debugPrint("On Bluedot Service Error: $args");
+          debugPrint('On Bluedot Service Error: $args');
           break;
           // iOS-only events
         case BluedotServiceEvents.locationAuthorizationDidChange:
-          debugPrint("Location Authorization Did Change: $args");
+          debugPrint('Location Authorization Did Change: $args');
           break;
         case BluedotServiceEvents.lowPowerModeDidChange:
-          debugPrint("Low Power Mode Did Change: $args");
+          debugPrint('Low Power Mode Did Change: $args');
           break;
         case BluedotServiceEvents.accuracyAuthorizationDidChange:
-          debugPrint("Accuracy Authorization Did Change: $args");
+          debugPrint('Accuracy Authorization Did Change: $args');
           break;
         default:
           break;

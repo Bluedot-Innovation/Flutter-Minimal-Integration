@@ -32,6 +32,7 @@ class _MyAppState extends State<MyApp> {
       title: 'Flutter Minimal App',
       home: const InitialPage(),
       routes: {
+        '/': (context) => const InitialPage(),
         '/home': (context) => const HomePage(),
         '/geo-triggering': (context) => const GeoTriggeringPage(),
         '/tempo': (context) => const TempoPage(),
