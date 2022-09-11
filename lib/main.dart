@@ -30,7 +30,6 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Minimal App',
-      home: const InitialPage(),
       routes: {
         '/': (context) => const InitialPage(),
         '/home': (context) => const HomePage(),
