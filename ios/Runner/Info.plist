@@ -2,10 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>fetch</string>
+		<string>processing</string>
+		<string>remote-notification</string>
+	</array>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>Please allow notifications from the app!</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Allow Flutter Point SDK Minimal Integration to use your location</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Allow Flutter Point SDK Minimal Integration to use your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Please allow access to your location when app is in use!</string>
+	<string>Allow Flutter Point SDK Minimal Integration to use your location</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

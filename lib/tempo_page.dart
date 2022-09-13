@@ -82,7 +82,6 @@ class _TempoPageState extends State<TempoPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     // Handle tempo events
