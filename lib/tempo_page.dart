@@ -1,4 +1,5 @@
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'helpers/show_error.dart';
@@ -32,7 +33,7 @@ class _TempoPageState extends State<TempoPage> {
       // Set custom event metadata.
       // We suggest to set the Custom Event Meta Data before starting GeoTriggering or Tempo.
       var metadata = {
-        'hs_orderId': "Order Id",
+        'hs_orderId': 'Order Id',
         'hs_Customer Name': 'Customer Name'
       };
       BluedotPointSdk.instance.setCustomEventMetaData(metadata);
@@ -43,6 +44,7 @@ class _TempoPageState extends State<TempoPage> {
               androidNotificationContent, androidNotificationId)
           .start(destinationId)
           .then((value) {
+            _saveDestinationId(destinationId);
             // Successfully started tempo tracking
         _updateTempoStatus();
       }).catchError((error) {
@@ -54,6 +56,17 @@ class _TempoPageState extends State<TempoPage> {
         showError('Failed to start tempo tracking', errorMessage, context);
       });
     }
+  }
+
+  void _saveDestinationId(String destinationId) async {
+    final sharedPrefs = await SharedPreferences.getInstance();
+    await sharedPrefs.setString('destinationId', destinationId);
+  }
+
+  void _prePopulateTextField() async {
+     final sharedPrefs = await SharedPreferences.getInstance();
+     var destinationId = sharedPrefs.getString('destinationId') ?? '';
+     textFieldController.text = destinationId;
   }
 
   /// Stop tempo tracking
@@ -74,7 +87,7 @@ class _TempoPageState extends State<TempoPage> {
   void _updateTempoStatus() {
     BluedotPointSdk.instance.isTempoRunning().then((value) {
       setState(() {
-        debugPrint("Is Tempo Running $value");
+        debugPrint('Is Tempo Running $value');
         _isTempoRunning = value;
       });
     });
@@ -89,12 +102,14 @@ class _TempoPageState extends State<TempoPage> {
       var args = call.arguments;
       switch (call.method) {
         case TempoEvents.tempoTrackingDidStopWithError:
-          debugPrint("TempoTrackingStoppedWithError: $args");
+          debugPrint('TempoTrackingStoppedWithError: $args');
           break;
         default:
           break;
       }
     });
+    _updateTempoStatus();
+    _prePopulateTextField();
   }
 
   @override
@@ -120,7 +135,7 @@ class _TempoPageState extends State<TempoPage> {
                         fontSize: 18,
                       ),
                     ),
-                    Text("Is Tempo Tracking Running: $_isTempoRunning"),
+                    Text('Is Tempo Tracking Running: $_isTempoRunning'),
                     TextFormField(
                       controller: textFieldController,
                       decoration: const InputDecoration(

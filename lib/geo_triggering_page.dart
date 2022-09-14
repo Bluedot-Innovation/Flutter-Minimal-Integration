@@ -80,7 +80,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   void _updateGeoTriggeringStatus() {
     BluedotPointSdk.instance.isGeoTriggeringRunning().then((value) {
       setState(() {
-        debugPrint("Is Geo Running $value");
+        debugPrint('Is Geo Running $value');
         _isGeoTriggeringRunning = value;
       });
     });
@@ -96,18 +96,19 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
       var args = call.arguments;
       switch (call.method) {
         case GeoTriggeringEvents.onZoneInfoUpdate:
-          debugPrint("On Zone Info Update: $args");
+          debugPrint('On Zone Info Update: $args');
           break;
         case GeoTriggeringEvents.didEnterZone:
-          debugPrint("Did Enter Zone: $args");
+          debugPrint('Did Enter Zone: $args');
           break;
         case GeoTriggeringEvents.didExitZone:
-          debugPrint("Did Exit Zone: $args");
+          debugPrint('Did Exit Zone: $args');
           break;
         default:
           break;
       }
     });
+    _updateGeoTriggeringStatus();
   }
 
   @override
@@ -130,7 +131,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
                       fontSize: 18,
                     ),
                   ),
-                  Text("Is Geo Triggering Running: $_isGeoTriggeringRunning"),
+                  Text('Is Geo Triggering Running: $_isGeoTriggeringRunning'),
                   if (!_isGeoTriggeringRunning) ...[
                     if (Platform.isAndroid) ...[
                       ElevatedButton(
