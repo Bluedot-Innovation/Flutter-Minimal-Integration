@@ -19,8 +19,10 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   /// Start Geo triggering in iOS and Android (background mode)
   void _startGeoTriggering() {
     BluedotPointSdk.instance.geoTriggeringBuilder().start().then((value) {
-      // Successfully started geo triggering
-      _updateGeoTriggeringStatus();
+      // Successfully started geo triggering, delay updating geo triggering status to wait for sdk to update geo-triggering status
+      Future.delayed(const Duration(milliseconds: 500), () {
+        _updateGeoTriggeringStatus();
+      });
     }).catchError((error) {
       // Failed to start geo triggering, handle error in here
       String errorMessage = error.toString();
