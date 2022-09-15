@@ -1,4 +1,6 @@
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
+import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'helpers/show_error.dart';
@@ -27,12 +29,12 @@ class _TempoPageState extends State<TempoPage> {
           'This app is running a foreground service using location service';
       int androidNotificationId = 123;
 
-      var destinationId = textFieldController.text;
+      var destinationId = textFieldController.text.trim();
 
       // Set custom event metadata.
       // We suggest to set the Custom Event Meta Data before starting GeoTriggering or Tempo.
       var metadata = {
-        'hs_orderId': "Order Id",
+        'hs_orderId': 'Order Id',
         'hs_Customer Name': 'Customer Name'
       };
       BluedotPointSdk.instance.setCustomEventMetaData(metadata);
@@ -43,6 +45,7 @@ class _TempoPageState extends State<TempoPage> {
               androidNotificationContent, androidNotificationId)
           .start(destinationId)
           .then((value) {
+            saveString('destinationId', destinationId);
             // Successfully started tempo tracking
         _updateTempoStatus();
       }).catchError((error) {
@@ -56,11 +59,19 @@ class _TempoPageState extends State<TempoPage> {
     }
   }
 
+  void _prePopulateTextField() async {
+     final sharedPrefs = await SharedPreferences.getInstance();
+     var destinationId = sharedPrefs.getString('destinationId') ?? '';
+     textFieldController.text = destinationId;
+  }
+
   /// Stop tempo tracking
   void _stopTempo() {
     BluedotPointSdk.instance.stopTempoTracking().then((value) {
       // Successfully stopped tempo tracking
-      _updateTempoStatus();
+      Future.delayed(const Duration(milliseconds: 500), () {
+        _updateTempoStatus();
+      });
     }).catchError((error) {
       // Failed to stop tempo tracking, handle error here
       String errorMessage = error.toString();
@@ -74,7 +85,7 @@ class _TempoPageState extends State<TempoPage> {
   void _updateTempoStatus() {
     BluedotPointSdk.instance.isTempoRunning().then((value) {
       setState(() {
-        debugPrint("Is Tempo Running $value");
+        debugPrint('Is Tempo Running $value');
         _isTempoRunning = value;
       });
     });
@@ -88,63 +99,73 @@ class _TempoPageState extends State<TempoPage> {
     tempoEventChannel.setMethodCallHandler((MethodCall call) async {
       var args = call.arguments;
       switch (call.method) {
-        case TempoEvents.tempoTrackingDidStopWithError:
-          debugPrint("TempoTrackingStoppedWithError: $args");
+        case TempoEvents.tempoTrackingStoppedWithError:
+          var errorCode = args['code'];
+          var errorMessage = args['message'];
+          showError('Tempo Tracking Stopped With Error', '$errorCode $errorMessage', context);
+          Future.delayed(const Duration(milliseconds: 500), () {
+            _updateTempoStatus();
+          });
           break;
         default:
           break;
       }
     });
+    _updateTempoStatus();
+    _prePopulateTextField();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('TEMPO'),
-      ),
-      body: Center(
-        child: Form(
-            key: _tempoFormKey,
-            child: Padding(
-              padding:
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+          appBar: AppBar(
+            title: const Text('TEMPO'),
+          ),
+          body: Center(
+            child: Form(
+                key: _tempoFormKey,
+                child: Padding(
+                  padding:
                   const EdgeInsets.symmetric(horizontal: 25, vertical: 200),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'TEMPO',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    Text("Is Tempo Tracking Running: $_isTempoRunning"),
-                    TextFormField(
-                      controller: textFieldController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Destination Id goes here',
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a valid destination Id';
-                        }
-                        return null;
-                      },
-                    ),
-                    if (!_isTempoRunning) ...[
-                      ElevatedButton(
-                          onPressed: _startTempo, child: const Text('START')),
-                    ] else ...[
-                      ElevatedButton(
-                          onPressed: _stopTempo, child: const Text('STOP')),
-                    ],
-                  ]),
-            )),
-      ),
-      resizeToAvoidBottomInset: false,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'TEMPO',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Text('Is Tempo Tracking Running: $_isTempoRunning'),
+                        TextFormField(
+                          controller: textFieldController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Destination Id goes here',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a valid destination Id';
+                            }
+                            return null;
+                          },
+                        ),
+                        if (!_isTempoRunning) ...[
+                          ElevatedButton(
+                              onPressed: _startTempo, child: const Text('START')),
+                        ] else ...[
+                          ElevatedButton(
+                              onPressed: _stopTempo, child: const Text('STOP')),
+                        ],
+                      ]),
+                )),
+          ),
+          resizeToAvoidBottomInset: false,
+        ),
     );
   }
 }

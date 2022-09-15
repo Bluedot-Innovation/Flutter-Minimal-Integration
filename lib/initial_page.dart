@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
+import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
 import 'helpers/show_error.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InitialPage extends StatefulWidget {
   const InitialPage({Key? key}) : super(key: key);
@@ -17,11 +19,12 @@ class _InitialPageState extends State<InitialPage> {
 
   void _initialize() async {
     if (_formKey.currentState!.validate()) {
-      var projectId = textFieldController.text;
+      var projectId = textFieldController.text.trim();
 
       // Initialize project with the provided [projectId]
       BluedotPointSdk.instance.initialize(projectId).then((value) {
         // Handle successful initialization
+        saveString('projectId', projectId);
         Navigator.pushNamed(context, '/home');
       }).catchError((error) {
         // Handle failed initialization
@@ -65,11 +68,14 @@ class _InitialPageState extends State<InitialPage> {
         Navigator.pushNamed(context, '/home');
       }
     });
+    clearSharedPreferences();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+    child: Scaffold(
       appBar: AppBar(
         title: const Text('Initialize project'),
       ),
@@ -108,6 +114,7 @@ class _InitialPageState extends State<InitialPage> {
         ),
       ),
       resizeToAvoidBottomInset: false,
+    ),
     );
   }
 }
