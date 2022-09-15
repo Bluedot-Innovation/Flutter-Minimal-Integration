@@ -1,4 +1,5 @@
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
+import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -44,7 +45,7 @@ class _TempoPageState extends State<TempoPage> {
               androidNotificationContent, androidNotificationId)
           .start(destinationId)
           .then((value) {
-            _saveDestinationId(destinationId);
+            saveString('destinationId', destinationId);
             // Successfully started tempo tracking
         _updateTempoStatus();
       }).catchError((error) {
@@ -58,11 +59,6 @@ class _TempoPageState extends State<TempoPage> {
     }
   }
 
-  void _saveDestinationId(String destinationId) async {
-    final sharedPrefs = await SharedPreferences.getInstance();
-    await sharedPrefs.setString('destinationId', destinationId);
-  }
-
   void _prePopulateTextField() async {
      final sharedPrefs = await SharedPreferences.getInstance();
      var destinationId = sharedPrefs.getString('destinationId') ?? '';
@@ -73,7 +69,9 @@ class _TempoPageState extends State<TempoPage> {
   void _stopTempo() {
     BluedotPointSdk.instance.stopTempoTracking().then((value) {
       // Successfully stopped tempo tracking
-      _updateTempoStatus();
+      Future.delayed(const Duration(milliseconds: 500), () {
+        _updateTempoStatus();
+      });
     }).catchError((error) {
       // Failed to stop tempo tracking, handle error here
       String errorMessage = error.toString();

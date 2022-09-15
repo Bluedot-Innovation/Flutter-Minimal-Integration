@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
+import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
 import 'helpers/show_error.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,7 +24,7 @@ class _InitialPageState extends State<InitialPage> {
       // Initialize project with the provided [projectId]
       BluedotPointSdk.instance.initialize(projectId).then((value) {
         // Handle successful initialization
-        _saveProjectId(projectId);
+        saveString('projectId', projectId);
         Navigator.pushNamed(context, '/home');
       }).catchError((error) {
         // Handle failed initialization
@@ -34,17 +35,6 @@ class _InitialPageState extends State<InitialPage> {
         showError('Failed to initialize project', errorMessage, context);
       });
     }
-  }
-
-  void _clearSharedPreferences() async {
-    final sharedPrefs = await SharedPreferences.getInstance();
-    await sharedPrefs.remove('destinationId');
-    await sharedPrefs.remove('projectId');
-  }
-
-  void _saveProjectId(String projectId) async {
-    final sharedPrefs = await SharedPreferences.getInstance();
-    await sharedPrefs.setString('projectId', projectId);
   }
 
   @override
@@ -78,8 +68,7 @@ class _InitialPageState extends State<InitialPage> {
         Navigator.pushNamed(context, '/home');
       }
     });
-
-    _clearSharedPreferences();
+    clearSharedPreferences();
   }
 
   @override

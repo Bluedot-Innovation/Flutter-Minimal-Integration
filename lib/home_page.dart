@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
+import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -43,7 +44,7 @@ class _HomePageState extends State<HomePage> {
     // Reset Bluedot Point SDK
     BluedotPointSdk.instance.reset().then((value) {
       Navigator.pop(context);
-      _clearSharedPreferences();
+      clearSharedPreferences();
     });
   }
 
@@ -53,12 +54,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _projectId = projectId;
     });
-  }
-
-  void _clearSharedPreferences() async {
-    final sharedPrefs = await SharedPreferences.getInstance();
-    await sharedPrefs.remove('destinationId');
-    await sharedPrefs.remove('projectId');
   }
 
   @override
