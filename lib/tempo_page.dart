@@ -28,7 +28,7 @@ class _TempoPageState extends State<TempoPage> {
           'This app is running a foreground service using location service';
       int androidNotificationId = 123;
 
-      var destinationId = textFieldController.text;
+      var destinationId = textFieldController.text.trim();
 
       // Set custom event metadata.
       // We suggest to set the Custom Event Meta Data before starting GeoTriggering or Tempo.
@@ -101,8 +101,14 @@ class _TempoPageState extends State<TempoPage> {
     tempoEventChannel.setMethodCallHandler((MethodCall call) async {
       var args = call.arguments;
       switch (call.method) {
-        case TempoEvents.tempoTrackingDidStopWithError:
-          debugPrint('TempoTrackingStoppedWithError: $args');
+        // TODO: change name to dart constant when plugin is merged to release
+        case TempoEvents.tempoTrackingStoppedWithError:
+          var errorCode = args["code"];
+          var errorMessage = args["message"];
+          showError("Tempo Tracking Stopped With Error", "$errorCode $errorMessage", context);
+          Future.delayed(const Duration(milliseconds: 500), () {
+            _updateTempoStatus();
+          });
           break;
         default:
           break;
@@ -114,52 +120,55 @@ class _TempoPageState extends State<TempoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('TEMPO'),
-      ),
-      body: Center(
-        child: Form(
-            key: _tempoFormKey,
-            child: Padding(
-              padding:
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+          appBar: AppBar(
+            title: const Text('TEMPO'),
+          ),
+          body: Center(
+            child: Form(
+                key: _tempoFormKey,
+                child: Padding(
+                  padding:
                   const EdgeInsets.symmetric(horizontal: 25, vertical: 200),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'TEMPO',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    Text('Is Tempo Tracking Running: $_isTempoRunning'),
-                    TextFormField(
-                      controller: textFieldController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Destination Id goes here',
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a valid destination Id';
-                        }
-                        return null;
-                      },
-                    ),
-                    if (!_isTempoRunning) ...[
-                      ElevatedButton(
-                          onPressed: _startTempo, child: const Text('START')),
-                    ] else ...[
-                      ElevatedButton(
-                          onPressed: _stopTempo, child: const Text('STOP')),
-                    ],
-                  ]),
-            )),
-      ),
-      resizeToAvoidBottomInset: false,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'TEMPO',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Text('Is Tempo Tracking Running: $_isTempoRunning'),
+                        TextFormField(
+                          controller: textFieldController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Destination Id goes here',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a valid destination Id';
+                            }
+                            return null;
+                          },
+                        ),
+                        if (!_isTempoRunning) ...[
+                          ElevatedButton(
+                              onPressed: _startTempo, child: const Text('START')),
+                        ] else ...[
+                          ElevatedButton(
+                              onPressed: _stopTempo, child: const Text('STOP')),
+                        ],
+                      ]),
+                )),
+          ),
+          resizeToAvoidBottomInset: false,
+        ),
     );
   }
 }

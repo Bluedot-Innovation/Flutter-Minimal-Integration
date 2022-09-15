@@ -12,6 +12,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String _installRef = '';
   String _sdkVersion = '';
+  String _projectId = '';
 
   @override
   void initState() {
@@ -26,6 +27,8 @@ class _HomePageState extends State<HomePage> {
         _sdkVersion = value;
       });
     });
+
+    _retrieveProjectId();
   }
 
   void _openGeoTriggeringPage() {
@@ -40,13 +43,22 @@ class _HomePageState extends State<HomePage> {
     // Reset Bluedot Point SDK
     BluedotPointSdk.instance.reset().then((value) {
       Navigator.pop(context);
-      _removeDestinationId();
+      _clearSharedPreferences();
     });
   }
 
-  void _removeDestinationId() async {
+  void _retrieveProjectId() async {
+    final sharedPrefs = await SharedPreferences.getInstance();
+    var projectId = sharedPrefs.getString('projectId') ?? '';
+    setState(() {
+      _projectId = projectId;
+    });
+  }
+
+  void _clearSharedPreferences() async {
     final sharedPrefs = await SharedPreferences.getInstance();
     await sharedPrefs.remove('destinationId');
+    await sharedPrefs.remove('projectId');
   }
 
   @override
@@ -74,6 +86,14 @@ class _HomePageState extends State<HomePage> {
                           fontSize: 20,
                         ),
                       ),
+                      const Text(
+                        'Project Id:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                      Text(_projectId),
                       const Text(
                         'Install Reference',
                         style: TextStyle(

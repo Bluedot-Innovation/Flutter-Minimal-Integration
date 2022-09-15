@@ -22,8 +22,12 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     // Request permissions for location and notification
-    Permission.locationWhenInUse.request();
-    Permission.notification.request();
+    _requestPermission();
+  }
+
+  void _requestPermission() async {
+    await Permission.locationWhenInUse.request();
+    await Permission.notification.request();
   }
 
   @override
