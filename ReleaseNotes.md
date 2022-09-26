@@ -1,3 +1,3 @@
-# flutter_minimal_app
+# Flutter Minimal Integration
 
-v 1.0.0
+- Using [Flutter Bluedot Point SDK Plugin](https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin) (support flutter@2.5.0)
