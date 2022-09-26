@@ -13,8 +13,8 @@ packages:
     description:
       path: "."
       ref: "release/1.0.0"
-      resolved-ref: "7908a162cd06b1751aa829776d41c12f898b3248"
-      url: "https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git"
+      resolved-ref: "6ddc1aca60683ff561faa124e3ab228445bc2807"
+      url: "git@github.com:Bluedot-Innovation/PointSDK-Flutter-Plugin.git"
     source: git
     version: "1.0.0"
   boolean_selector:
