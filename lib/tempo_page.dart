@@ -3,7 +3,7 @@ import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'helpers/show_error.dart';
+import 'helpers/show_alert.dart';
 
 class TempoPage extends StatefulWidget {
   const TempoPage({Key? key}) : super(key: key);
@@ -54,7 +54,7 @@ class _TempoPageState extends State<TempoPage> {
         if (error is PlatformException) {
           errorMessage = error.message!;
         }
-        showError('Failed to start tempo tracking', errorMessage, context);
+        showAlert('Failed to start tempo tracking', errorMessage, context);
       });
     }
   }
@@ -78,7 +78,7 @@ class _TempoPageState extends State<TempoPage> {
       if (error is PlatformException) {
         errorMessage = error.message!;
       }
-      showError('Failed to stop tempo tracking', errorMessage, context);
+      showAlert('Failed to stop tempo tracking', errorMessage, context);
     });
   }
 
@@ -102,7 +102,7 @@ class _TempoPageState extends State<TempoPage> {
         case TempoEvents.tempoTrackingStoppedWithError:
           var errorCode = args['code'];
           var errorMessage = args['message'];
-          showError('Tempo Tracking Stopped With Error', '$errorCode $errorMessage', context);
+          showAlert('Tempo Tracking Stopped With Error', '$errorCode $errorMessage', context);
           Future.delayed(const Duration(milliseconds: 500), () {
             _updateTempoStatus();
           });
