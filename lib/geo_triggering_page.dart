@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'helpers/show_error.dart';
+import 'helpers/show_alert.dart';
 
 class GeoTriggeringPage extends StatefulWidget {
   const GeoTriggeringPage({Key? key}) : super(key: key);
@@ -29,7 +29,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
       if (error is PlatformException) {
         errorMessage = error.message!;
       }
-      showError('Fail to start geo triggering', errorMessage, context);
+      showAlert('Fail to start geo triggering', errorMessage, context);
     });
   }
 
@@ -58,7 +58,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
       if (error is PlatformException) {
         errorMessage = error.message!;
       }
-      showError('Fail to start geo triggering with android notification',
+      showAlert('Fail to start geo triggering with android notification',
           errorMessage, context);
     });
   }
@@ -74,7 +74,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
       if (error is PlatformException) {
         errorMessage = error.message!;
       }
-      showError('Fail to stop geo triggering', errorMessage, context);
+      showAlert('Fail to stop geo triggering', errorMessage, context);
     });
   }
 
@@ -96,15 +96,19 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
     // Handle geo triggering events
     geoTriggeringEventChannel.setMethodCallHandler((MethodCall call) async {
       var args = call.arguments;
+      var geoTriggeringAlertTitle = 'Geo-Triggering Events';
       switch (call.method) {
         case GeoTriggeringEvents.onZoneInfoUpdate:
           debugPrint('On Zone Info Update: $args');
+          showAlert(geoTriggeringAlertTitle, 'On Zone Info Update: $args', context);
           break;
         case GeoTriggeringEvents.didEnterZone:
           debugPrint('Did Enter Zone: $args');
+          showAlert(geoTriggeringAlertTitle, 'Did Enter Zone: $args', context);
           break;
         case GeoTriggeringEvents.didExitZone:
           debugPrint('Did Exit Zone: $args');
+          showAlert(geoTriggeringAlertTitle, 'Did Exit Zone: $args', context);
           break;
         default:
           break;

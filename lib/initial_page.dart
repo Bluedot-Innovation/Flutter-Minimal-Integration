@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
 import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
-import 'helpers/show_error.dart';
+import 'helpers/show_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InitialPage extends StatefulWidget {
@@ -32,7 +32,7 @@ class _InitialPageState extends State<InitialPage> {
         if (error is PlatformException) {
           errorMessage = error.message!;
         }
-        showError('Failed to initialize project', errorMessage, context);
+        showAlert('Failed to initialize project', errorMessage, context);
       });
     }
   }
@@ -44,19 +44,24 @@ class _InitialPageState extends State<InitialPage> {
     // Handle error of Bluedot service events
     _serviceMethodChannel.setMethodCallHandler((MethodCall call) async {
       var args = call.arguments;
+      var bluedotServiceAlertTitle = 'Bluedot Service Events';
       switch (call.method) {
         case BluedotServiceEvents.onBluedotServiceError:
           debugPrint('On Bluedot Service Error: $args');
+          showAlert(bluedotServiceAlertTitle, 'On Bluedot Service Error: $args', context);
           break;
           // iOS-only events
         case BluedotServiceEvents.locationAuthorizationDidChange:
           debugPrint('Location Authorization Did Change: $args');
+          showAlert(bluedotServiceAlertTitle, 'Location Authorization Did Change: $args', context);
           break;
         case BluedotServiceEvents.lowPowerModeDidChange:
           debugPrint('Low Power Mode Did Change: $args');
+          showAlert(bluedotServiceAlertTitle, 'Low Power Mode Did Change: $args', context);
           break;
         case BluedotServiceEvents.accuracyAuthorizationDidChange:
           debugPrint('Accuracy Authorization Did Change: $args');
+          showAlert(bluedotServiceAlertTitle, 'Accuracy Authorization Did Change: $args', context);
           break;
         default:
           break;
