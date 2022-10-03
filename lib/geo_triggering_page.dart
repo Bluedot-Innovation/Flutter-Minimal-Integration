@@ -96,18 +96,19 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
     // Handle geo triggering events
     geoTriggeringEventChannel.setMethodCallHandler((MethodCall call) async {
       var args = call.arguments;
+      var geoTriggeringAlertTitle = 'Geo-Triggering Events';
       switch (call.method) {
         case GeoTriggeringEvents.onZoneInfoUpdate:
           debugPrint('On Zone Info Update: $args');
-          showAlert('Geo-Triggering Events', 'On Zone Info Update: $args', context);
+          showAlert(geoTriggeringAlertTitle, 'On Zone Info Update: $args', context);
           break;
         case GeoTriggeringEvents.didEnterZone:
           debugPrint('Did Enter Zone: $args');
-          showAlert('Geo-Triggering Events', 'Did Enter Zone: $args', context);
+          showAlert(geoTriggeringAlertTitle, 'Did Enter Zone: $args', context);
           break;
         case GeoTriggeringEvents.didExitZone:
           debugPrint('Did Exit Zone: $args');
-          showAlert('Geo-Triggering Events', 'Did Exit Zone: $args', context);
+          showAlert(geoTriggeringAlertTitle, 'Did Exit Zone: $args', context);
           break;
         default:
           break;

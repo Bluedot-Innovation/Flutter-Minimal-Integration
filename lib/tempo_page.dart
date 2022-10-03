@@ -98,11 +98,12 @@ class _TempoPageState extends State<TempoPage> {
     // Handle tempo events
     tempoEventChannel.setMethodCallHandler((MethodCall call) async {
       var args = call.arguments;
+      var tempoAlertTitle = 'Tempo Events';
       switch (call.method) {
         case TempoEvents.tempoTrackingStoppedWithError:
           var errorCode = args['code'];
           var errorMessage = args['message'];
-          showAlert('Tempo Tracking Stopped With Error', '$errorCode $errorMessage', context);
+          showAlert(tempoAlertTitle, 'Tempo Tracking Stopped With Error: $errorCode $errorMessage', context);
           Future.delayed(const Duration(milliseconds: 500), () {
             _updateTempoStatus();
           });
