@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'helpers/show_alert.dart';
+import 'dart:math';
 
 class TempoPage extends StatefulWidget {
   const TempoPage({Key? key}) : super(key: key);
@@ -34,8 +35,8 @@ class _TempoPageState extends State<TempoPage> {
       // Set custom event metadata.
       // We suggest to set the Custom Event Meta Data before starting GeoTriggering or Tempo.
       var metadata = {
-        'hs_orderId': 'Order Id',
-        'hs_Customer Name': 'Customer Name'
+        'hs_orderId': _generateRandomString(5),
+        'hs_Customer Name': 'QA Testing'
       };
       BluedotPointSdk.instance.setCustomEventMetaData(metadata);
 
@@ -57,6 +58,13 @@ class _TempoPageState extends State<TempoPage> {
         showAlert('Failed to start tempo tracking', errorMessage, context);
       });
     }
+  }
+
+  // QA testing only
+  String _generateRandomString(int len) {
+    var r = Random();
+    const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    return List.generate(len, (index) => _chars[r.nextInt(_chars.length)]).join();
   }
 
   void _prePopulateTextField() async {
