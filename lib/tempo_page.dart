@@ -1,6 +1,6 @@
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
-import 'package:flutter_minimal_integration/helpers/constants.dart';
 import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'helpers/show_alert.dart';
@@ -23,6 +23,8 @@ class _TempoPageState extends State<TempoPage> {
   void _startTempo() {
     if (_tempoFormKey.currentState!.validate()) {
 
+      String channelId = 'Bluedot Flutter';
+      String channelName = 'Bluedot Flutter';
       String androidNotificationTitle = 'Bluedot Foreground Service - Tempo';
       String androidNotificationContent =
           'This app is running a foreground service using location service';
@@ -40,11 +42,11 @@ class _TempoPageState extends State<TempoPage> {
 
       BluedotPointSdk.instance
           .tempoBuilder()
-          .androidNotification(bluedotChannelId, bluedotChannelName, androidNotificationTitle,
+          .androidNotification(channelId, channelName, androidNotificationTitle,
               androidNotificationContent, androidNotificationId)
           .start(destinationId)
           .then((value) {
-            saveString(destinationIdString, destinationId);
+            saveString('destinationId', destinationId);
             // Successfully started tempo tracking
         _updateTempoStatus();
       }).catchError((error) {
@@ -66,7 +68,8 @@ class _TempoPageState extends State<TempoPage> {
   }
 
   void _prePopulateTextField() async {
-     var destinationId = await getStringForKey(destinationIdString);
+     final sharedPrefs = await SharedPreferences.getInstance();
+     var destinationId = sharedPrefs.getString('destinationId') ?? '';
      textFieldController.text = destinationId;
   }
 

@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
-import 'helpers/constants.dart';
 import 'helpers/show_alert.dart';
 
 class GeoTriggeringPage extends StatefulWidget {
@@ -16,7 +14,6 @@ class GeoTriggeringPage extends StatefulWidget {
 
 class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   bool _isGeoTriggeringRunning = false;
-  bool _isBackgroundLocationUpdateEnabled = false;
   final geoTriggeringEventChannel = const MethodChannel(BluedotPointSdk.geoTriggering); // Method channel to listen to geo triggering events
 
   /// Start Geo triggering in iOS and Android (background mode)
@@ -38,6 +35,8 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
 
   /// Start Geo Triggering in iOS and Android (foreground mode)
   void _startGeoTriggeringWithAndroidNotification() {
+    String channelId = 'Bluedot Flutter';
+    String channelName = 'Bluedot Flutter';
     String androidNotificationTitle =
         'Bluedot Foreground Service - Geo-triggering';
     String androidNotificationContent =
@@ -47,7 +46,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
     BluedotPointSdk.instance
         .geoTriggeringBuilder()
         // Setting notification details for Android foreground service
-        .androidNotification(bluedotChannelId, bluedotChannelName, androidNotificationTitle,
+        .androidNotification(channelId, channelName, androidNotificationTitle,
             androidNotificationContent, androidNotificationId)
         .start()
         .then((value) {
@@ -89,21 +88,6 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
     });
   }
 
-  void _toggleBluebar(bool value) {
-    BluedotPointSdk.instance.allowBackgroundLocationUpdates(value);
-    setState(() {
-      _isBackgroundLocationUpdateEnabled = value;
-      saveBool(isBackgroundLocationUpdateString, value);
-    });
-  }
-
-  void _updateBackgroundLocationStatus() async {
-    var backgroundLocationStatus = await getBoolForKey(isBackgroundLocationUpdateString);
-    setState(() {
-      _isBackgroundLocationUpdateEnabled = backgroundLocationStatus;
-    });
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -131,7 +115,6 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
       }
     });
     _updateGeoTriggeringStatus();
-    _updateBackgroundLocationStatus();
   }
 
   @override
@@ -154,13 +137,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
                       fontSize: 18,
                     ),
                   ),
-                  if (Platform.isIOS) ...[
-                    const Text('Allow Background Location Updates'),
-                    Switch.adaptive(value: _isBackgroundLocationUpdateEnabled,
-                        onChanged: (newValue) => _toggleBluebar(newValue)),
-                    Text('Is Background Location Enabled: $_isBackgroundLocationUpdateEnabled'),
-                  ],
-                    Text('Is Geo Triggering Running: $_isGeoTriggeringRunning'),
+                  Text('Is Geo Triggering Running: $_isGeoTriggeringRunning'),
                   if (!_isGeoTriggeringRunning) ...[
                     if (Platform.isAndroid) ...[
                       ElevatedButton(
