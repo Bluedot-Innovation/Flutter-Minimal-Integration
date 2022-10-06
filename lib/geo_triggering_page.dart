@@ -17,7 +17,8 @@ class GeoTriggeringPage extends StatefulWidget {
 class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   bool _isGeoTriggeringRunning = false;
   bool _isBackgroundLocationUpdateEnabled = false;
-  final geoTriggeringEventChannel = const MethodChannel(BluedotPointSdk.geoTriggering); // Method channel to listen to geo triggering events
+  final geoTriggeringEventChannel = const MethodChannel(BluedotPointSdk
+      .geoTriggering); // Method channel to listen to geo triggering events
 
   /// Start Geo triggering in iOS and Android (background mode)
   void _startGeoTriggering() {
@@ -47,11 +48,15 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
     BluedotPointSdk.instance
         .geoTriggeringBuilder()
         // Setting notification details for Android foreground service
-        .androidNotification(bluedotChannelId, bluedotChannelName, androidNotificationTitle,
-            androidNotificationContent, androidNotificationId)
+        .androidNotification(
+            bluedotChannelId,
+            bluedotChannelName,
+            androidNotificationTitle,
+            androidNotificationContent,
+            androidNotificationId)
         .start()
         .then((value) {
-          // Handle successful start of geo-triggering
+      // Handle successful start of geo-triggering
       _updateGeoTriggeringStatus();
     }).catchError((error) {
       // Handle failed start of geo-triggering, handle error in here
@@ -89,7 +94,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
     });
   }
 
-  void _toggleBluebar(bool value) {
+  void _allowBackgroundLocationUpdates(bool value) {
     BluedotPointSdk.instance.allowBackgroundLocationUpdates(value);
     setState(() {
       _isBackgroundLocationUpdateEnabled = value;
@@ -98,7 +103,8 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   }
 
   void _updateBackgroundLocationStatus() async {
-    var backgroundLocationStatus = await getBoolForKey(isBackgroundLocationUpdateString);
+    var backgroundLocationStatus =
+        await getBoolForKey(isBackgroundLocationUpdateString);
     setState(() {
       _isBackgroundLocationUpdateEnabled = backgroundLocationStatus;
     });
@@ -116,7 +122,8 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
       switch (call.method) {
         case GeoTriggeringEvents.onZoneInfoUpdate:
           debugPrint('On Zone Info Update: $args');
-          showAlert(geoTriggeringAlertTitle, 'On Zone Info Update: $args', context);
+          showAlert(
+              geoTriggeringAlertTitle, 'On Zone Info Update: $args', context);
           break;
         case GeoTriggeringEvents.didEnterZone:
           debugPrint('Did Enter Zone: $args');
@@ -142,7 +149,8 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
         ),
         body: Center(
           child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 200),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 25, vertical: 200),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,11 +164,14 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
                   ),
                   if (Platform.isIOS) ...[
                     const Text('Allow Background Location Updates'),
-                    Switch.adaptive(value: _isBackgroundLocationUpdateEnabled,
-                        onChanged: (newValue) => _toggleBluebar(newValue)),
-                    Text('Is Background Location Enabled: $_isBackgroundLocationUpdateEnabled'),
+                    Switch.adaptive(
+                        value: _isBackgroundLocationUpdateEnabled,
+                        onChanged: (newValue) =>
+                            _allowBackgroundLocationUpdates(newValue)),
+                    Text(
+                        'Is Background Location Enabled: $_isBackgroundLocationUpdateEnabled'),
                   ],
-                    Text('Is Geo Triggering Running: $_isGeoTriggeringRunning'),
+                  Text('Is Geo Triggering Running: $_isGeoTriggeringRunning'),
                   if (!_isGeoTriggeringRunning) ...[
                     if (Platform.isAndroid) ...[
                       ElevatedButton(
