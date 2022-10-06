@@ -112,7 +112,6 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     // Handle geo triggering events
