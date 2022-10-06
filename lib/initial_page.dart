@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
+import 'package:flutter_minimal_integration/helpers/constants.dart';
 import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
 import 'helpers/show_alert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class InitialPage extends StatefulWidget {
   const InitialPage({Key? key}) : super(key: key);
@@ -24,7 +24,7 @@ class _InitialPageState extends State<InitialPage> {
       // Initialize project with the provided [projectId]
       BluedotPointSdk.instance.initialize(projectId).then((value) {
         // Handle successful initialization
-        saveString('projectId', projectId);
+        saveString(projectIdString, projectId);
         Navigator.pushNamed(context, '/home');
       }).catchError((error) {
         // Handle failed initialization
