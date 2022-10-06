@@ -5,7 +5,6 @@ void clearSharedPreferences() async {
   final sharedPrefs = await SharedPreferences.getInstance();
   await sharedPrefs.remove(destinationIdString);
   await sharedPrefs.remove(projectIdString);
-  await sharedPrefs.remove(isBackgroundLocationUpdateString);
 }
 
 void saveString(String key, String value) async {
