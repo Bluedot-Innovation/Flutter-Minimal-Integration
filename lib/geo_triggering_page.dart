@@ -94,8 +94,8 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
     });
   }
 
-  void _allowBackgroundLocationUpdates(bool value) {
-    BluedotPointSdk.instance.allowBackgroundLocationUpdates(value);
+  void _allowsBackgroundLocationUpdates(bool value) {
+    BluedotPointSdk.instance.allowsBackgroundLocationUpdates(value);
     setState(() {
       _isBackgroundLocationUpdateEnabled = value;
       saveBool(isBackgroundLocationUpdateString, value);
@@ -166,7 +166,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
                     Switch.adaptive(
                         value: _isBackgroundLocationUpdateEnabled,
                         onChanged: (newValue) =>
-                            _allowBackgroundLocationUpdates(newValue)),
+                            _allowsBackgroundLocationUpdates(newValue)),
                     Text(
                         'Is Background Location Enabled: $_isBackgroundLocationUpdateEnabled'),
                   ],
