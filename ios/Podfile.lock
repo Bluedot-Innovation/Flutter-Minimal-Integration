@@ -1,28 +1,29 @@
 PODS:
-  - AppCenter (4.4.3):
-    - AppCenter/Analytics (= 4.4.3)
-    - AppCenter/Crashes (= 4.4.3)
-  - AppCenter/Analytics (4.4.3):
+  - AppCenter (5.0.2):
+    - AppCenter/Analytics (= 5.0.2)
+    - AppCenter/Crashes (= 5.0.2)
+  - AppCenter/Analytics (5.0.2):
     - AppCenter/Core
-  - AppCenter/Core (4.4.3)
-  - AppCenter/Crashes (4.4.3):
+  - AppCenter/Core (5.0.2)
+  - AppCenter/Crashes (5.0.2):
     - AppCenter/Core
-  - bluedot_point_sdk (1.0.0):
-    - BluedotPointSDK (= 15.6.4)
+  - bluedot_point_sdk (1.0.1):
+    - BluedotPointSDK (= 15.6.7)
     - Flutter
-  - BluedotPointSDK (15.6.4)
+  - BluedotPointSDK (15.6.7)
   - Flutter (1.0.0)
   - permission_handler_apple (9.0.4):
     - Flutter
-  - shared_preferences_ios (0.0.1):
+  - shared_preferences_foundation (0.0.1):
     - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - AppCenter
   - bluedot_point_sdk (from `.symlinks/plugins/bluedot_point_sdk/ios`)
   - Flutter (from `Flutter`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
-  - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
 
 SPEC REPOS:
   trunk:
@@ -36,17 +37,17 @@ EXTERNAL SOURCES:
     :path: Flutter
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
-  shared_preferences_ios:
-    :path: ".symlinks/plugins/shared_preferences_ios/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
 
 SPEC CHECKSUMS:
-  AppCenter: 3fd04aa1b166e16fdb03ec81dabe488aece83fbd
-  bluedot_point_sdk: ad40a4c743fd48c44b19daaeb71fcf68d5bf6d5b
-  BluedotPointSDK: cfd2a0c60867f93c838099803db6d8a1dca6388b
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  AppCenter: 355ba776b273d30147c3ac385c558bec60a7d4b1
+  bluedot_point_sdk: 96fb38d6cfe15fcbd6672ad25012aef25c080251
+  BluedotPointSDK: 9e88bda0f6b76839bcca15c85b27155e385ed72f
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
-  shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
+  shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
 
 PODFILE CHECKSUM: 6a1bb9de5d6faccc5c5ada5c1e04911b539fdd2d
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0
