@@ -1,3 +1,5 @@
-# Flutter Minimal Integration
+# Flutter Minimal Integration v1.0.1 Release Notes
 
-- Using [Flutter Bluedot Point SDK Plugin](https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin) (support flutter@2.5.0)
+- Updated to Point Flutter Plugin v1.0.1 using the latest iOS PointSDK 15.6.7 and Android PointSDK 15.5.3
+- Added example of `setNotificationIcon(String icon)` to set GeoTriggering Foreground Notification Icon (Android only)
+- Updated Min App's app icon and notification icon

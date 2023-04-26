@@ -11,7 +11,7 @@ workflows:
       - Check out [Getting started with Flutter apps](https://devcenter.bitrise.io/en/getting-started/getting-started-with-flutter-apps.html).
     steps:
     - activate-ssh-key@4: {}
-    - git-clone@7: {}
+    - git-clone@8: {}
     - flutter-installer@0:
         inputs:
         - is_update: 'false'
@@ -198,7 +198,7 @@ workflows:
       - Check out [Getting started with Flutter apps](https://devcenter.bitrise.io/en/getting-started/getting-started-with-flutter-apps.html).
     steps:
     - activate-ssh-key@4: {}
-    - git-clone@7: {}
+    - git-clone@8: {}
     - cache-pull@2: {}
     - flutter-installer@0:
         inputs:
