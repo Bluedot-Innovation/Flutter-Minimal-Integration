@@ -13,8 +13,6 @@ workflows:
     - git-clone@8: {}
     - flutter-installer@0:
         inputs:
-        - is_update: "false"
-        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_3.3.2-stable.zip
         - is_debug: "true"
     - cache-pull@2: {}
     - script@1:
@@ -201,8 +199,6 @@ workflows:
     - cache-pull@2: {}
     - flutter-installer@0:
         inputs:
-        - is_update: "false"
-        - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.3.2-stable.zip
         - is_debug: "true"
     - script@1:
         title: Install yq
