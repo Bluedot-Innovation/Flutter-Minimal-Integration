@@ -1,5 +1,4 @@
----
-format_version: '11'
+format_version: "11"
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: flutter
 workflows:
@@ -14,9 +13,9 @@ workflows:
     - git-clone@7: {}
     - flutter-installer@0:
         inputs:
-        - is_update: 'false'
+        - is_update: "false"
         - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_3.3.2-stable.zip
-        - is_debug: 'true'
+        - is_debug: "true"
     - cache-pull@2: {}
     - script@1:
         inputs:
@@ -100,46 +99,46 @@ workflows:
     - change-value@2:
         title: Update AppCenter secret Android
         inputs:
-        - new_value: "$APPCENTER_SECRET_ANDROID"
-        - file: "./android/app/src/main/kotlin/io/bluedot/flutter_minimal_app/MainActivity.kt"
+        - new_value: $APPCENTER_SECRET_ANDROID
+        - file: ./android/app/src/main/kotlin/io/bluedot/flutter_minimal_app/MainActivity.kt
         - old_value: APPCENTER_SECRET_ANDROID
     - change-value@2:
         title: Update AppCenter secret iOS
         is_always_run: true
         inputs:
         - old_value: APPCENTER_SECRET_IOS
-        - new_value: "$APPCENTER_SECRET_IOS"
-        - file: "./ios/Runner/AppDelegate.swift"
+        - new_value: $APPCENTER_SECRET_IOS
+        - file: ./ios/Runner/AppDelegate.swift
     - install-missing-android-tools@3:
         is_always_run: true
     - change-android-versioncode-and-versionname@1:
         is_always_run: true
         inputs:
-        - new_version_name: "$FLUTTER_PLUGIN_VERSION"
-        - build_gradle_path: "$BITRISE_SOURCE_DIR/android/app/build.gradle"
+        - new_version_name: $FLUTTER_PLUGIN_VERSION
+        - build_gradle_path: $BITRISE_SOURCE_DIR/android/app/build.gradle
     - set-xcode-build-number@1:
         is_always_run: true
         inputs:
-        - build_short_version_string: "$FLUTTER_PLUGIN_VERSION"
-        - plist_path: "$IOS_INFO_PLIST"
+        - build_short_version_string: $FLUTTER_PLUGIN_VERSION
+        - plist_path: $IOS_INFO_PLIST
     - flutter-build@0:
         is_always_run: true
         inputs:
         - cache_level: none
-        - android_output_pattern: "*build/app/outputs/apk/*/*.apk"
+        - android_output_pattern: '*build/app/outputs/apk/*/*.apk'
     - sign-apk@1:
         inputs:
-        - use_apk_signer: 'true'
-        - android_app: "$BITRISE_APK_PATH"
+        - use_apk_signer: "true"
+        - android_app: $BITRISE_APK_PATH
     - appcenter-deploy-android@2:
         inputs:
-        - owner_name: "$APPCENTER_OWNER"
-        - app_name: "$APPCENTER_APP_NAME_ANDROID"
-        - distribution_group: "$APPCENTER_DISTRIBUTION_GROUPS"
-        - release_notes: "$RELEASE_NOTES"
-        - notify_testers: 'no'
-        - app_path: "$BITRISE_APK_PATH"
-        - api_token: "$APPCENTER_TOKEN"
+        - owner_name: $APPCENTER_OWNER
+        - app_name: $APPCENTER_APP_NAME_ANDROID
+        - distribution_group: $APPCENTER_DISTRIBUTION_GROUPS
+        - release_notes: $RELEASE_NOTES
+        - notify_testers: "no"
+        - app_path: $BITRISE_APK_PATH
+        - api_token: $APPCENTER_TOKEN
     - set-env-var@0:
         title: Save AppCenter Android URL
         inputs:
@@ -149,17 +148,17 @@ workflows:
         is_always_run: true
         inputs:
         - automatic_code_signing: api-key
-        - compile_bitcode: 'no'
-        - upload_bitcode: 'no'
+        - compile_bitcode: "no"
+        - upload_bitcode: "no"
         - distribution_method: ad-hoc
     - appcenter-deploy-ios@2:
         inputs:
-        - owner_name: "$APPCENTER_OWNER"
-        - app_name: "$APPCENTER_APP_NAME_IOS"
-        - distribution_group: "$APPCENTER_DISTRIBUTION_GROUPS"
-        - release_notes: "$RELEASE_NOTES"
-        - notify_testers: 'no'
-        - api_token: "$APPCENTER_TOKEN"
+        - owner_name: $APPCENTER_OWNER
+        - app_name: $APPCENTER_APP_NAME_IOS
+        - distribution_group: $APPCENTER_DISTRIBUTION_GROUPS
+        - release_notes: $RELEASE_NOTES
+        - notify_testers: "no"
+        - api_token: $APPCENTER_TOKEN
     - set-env-var@0:
         title: Save AppCenter iOS install URL
         inputs:
@@ -168,28 +167,28 @@ workflows:
     - cache-push@2: {}
     - deploy-to-bitrise-io@2:
         inputs:
-        - is_enable_public_page: 'false'
+        - is_enable_public_page: "false"
         - notify_user_groups: none
     - slack@3:
         inputs:
-        - channel: ''
-        - emoji: ":tada:"
+        - channel: ""
+        - emoji: ':tada:'
         - from_username: Flutter Min App
-        - footer: ''
-        - webhook_url_on_error: "$SLACK_WEBHOOK"
-        - channel_on_error: ''
-        - text_on_error: ''
-        - emoji_on_error: ":sob:"
+        - footer: ""
+        - webhook_url_on_error: $SLACK_WEBHOOK
+        - channel_on_error: ""
+        - text_on_error: ""
+        - emoji_on_error: ':sob:'
         - from_username_on_error: Flutter Min App
-        - text: ''
+        - text: ""
         - buttons: |
             View App|${BITRISE_APP_URL}
             View Build|${BITRISE_BUILD_URL}
             App Center Android|${APPCENTER_URL_ANDROID}
             App Center iOS|${APPCENTER_URL_IOS}
-        - pretext: "*:tada: Flutter Min App Downstream Build Succeeded! :tada:*"
-        - pretext_on_error: "*Oh no, Build Failed! :sob:*"
-        - webhook_url: "$SLACK_WEBHOOK"
+        - pretext: '*:tada: Flutter Min App Downstream Build Succeeded! :tada:*'
+        - pretext_on_error: '*Oh no, Build Failed! :sob:*'
+        - webhook_url: $SLACK_WEBHOOK
   min-app:
     description: |
       Builds project and runs tests.
@@ -202,9 +201,9 @@ workflows:
     - cache-pull@2: {}
     - flutter-installer@0:
         inputs:
-        - is_update: 'false'
+        - is_update: "false"
         - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.3.2-stable.zip
-        - is_debug: 'true'
+        - is_debug: "true"
     - script@1:
         title: Install yq
         inputs:
@@ -248,46 +247,46 @@ workflows:
     - change-value@2:
         title: Update AppCenter secret Android
         inputs:
-        - new_value: "$APPCENTER_SECRET_ANDROID"
-        - file: "./android/app/src/main/kotlin/io/bluedot/flutter_minimal_app/MainActivity.kt"
+        - new_value: $APPCENTER_SECRET_ANDROID
+        - file: ./android/app/src/main/kotlin/io/bluedot/flutter_minimal_app/MainActivity.kt
         - old_value: APPCENTER_SECRET_ANDROID
     - change-value@2:
         title: Update AppCenter secret iOS
         is_always_run: true
         inputs:
         - old_value: APPCENTER_SECRET_IOS
-        - new_value: "$APPCENTER_SECRET_IOS"
-        - file: "./ios/Runner/AppDelegate.swift"
+        - new_value: $APPCENTER_SECRET_IOS
+        - file: ./ios/Runner/AppDelegate.swift
     - install-missing-android-tools@3:
         is_always_run: true
     - change-android-versioncode-and-versionname@1:
         is_always_run: true
         inputs:
-        - new_version_name: "$FLUTTER_VERSION"
-        - build_gradle_path: "$BITRISE_SOURCE_DIR/android/app/build.gradle"
+        - new_version_name: $FLUTTER_VERSION
+        - build_gradle_path: $BITRISE_SOURCE_DIR/android/app/build.gradle
     - set-xcode-build-number@1:
         is_always_run: true
         inputs:
-        - build_short_version_string: "$FLUTTER_VERSION"
-        - plist_path: "$IOS_INFO_PLIST"
+        - build_short_version_string: $FLUTTER_VERSION
+        - plist_path: $IOS_INFO_PLIST
     - flutter-build@0:
         is_always_run: true
         inputs:
         - cache_level: none
-        - android_output_pattern: "*build/app/outputs/apk/*/*.apk"
+        - android_output_pattern: '*build/app/outputs/apk/*/*.apk'
     - sign-apk@1:
         inputs:
-        - use_apk_signer: 'true'
-        - android_app: "$BITRISE_APK_PATH"
+        - use_apk_signer: "true"
+        - android_app: $BITRISE_APK_PATH
     - appcenter-deploy-android@2:
         inputs:
-        - owner_name: "$APPCENTER_OWNER"
-        - app_name: "$APPCENTER_APP_NAME_ANDROID"
-        - distribution_group: "$APPCENTER_DISTRIBUTION_GROUPS"
-        - release_notes: "$RELEASE_NOTES"
-        - notify_testers: 'no'
-        - app_path: "$BITRISE_APK_PATH"
-        - api_token: "$APPCENTER_TOKEN"
+        - owner_name: $APPCENTER_OWNER
+        - app_name: $APPCENTER_APP_NAME_ANDROID
+        - distribution_group: $APPCENTER_DISTRIBUTION_GROUPS
+        - release_notes: $RELEASE_NOTES
+        - notify_testers: "no"
+        - app_path: $BITRISE_APK_PATH
+        - api_token: $APPCENTER_TOKEN
     - set-env-var@0:
         title: Save AppCenter Android URL
         inputs:
@@ -297,17 +296,17 @@ workflows:
         is_always_run: true
         inputs:
         - automatic_code_signing: api-key
-        - compile_bitcode: 'no'
-        - upload_bitcode: 'no'
+        - compile_bitcode: "no"
+        - upload_bitcode: "no"
         - distribution_method: ad-hoc
     - appcenter-deploy-ios@2:
         inputs:
-        - owner_name: "$APPCENTER_OWNER"
-        - app_name: "$APPCENTER_APP_NAME_IOS"
-        - distribution_group: "$APPCENTER_DISTRIBUTION_GROUPS"
-        - release_notes: "$RELEASE_NOTES"
-        - notify_testers: 'no'
-        - api_token: "$APPCENTER_TOKEN"
+        - owner_name: $APPCENTER_OWNER
+        - app_name: $APPCENTER_APP_NAME_IOS
+        - distribution_group: $APPCENTER_DISTRIBUTION_GROUPS
+        - release_notes: $RELEASE_NOTES
+        - notify_testers: "no"
+        - api_token: $APPCENTER_TOKEN
     - set-env-var@0:
         title: Save AppCenter iOS install URL
         inputs:
@@ -316,37 +315,37 @@ workflows:
     - cache-push@2: {}
     - deploy-to-bitrise-io@2:
         inputs:
-        - is_enable_public_page: 'false'
+        - is_enable_public_page: "false"
         - notify_user_groups: none
     - slack@3:
         inputs:
-        - channel: ''
-        - emoji: ":tada:"
+        - channel: ""
+        - emoji: ':tada:'
         - from_username: Flutter Min App
-        - footer: ''
-        - webhook_url_on_error: "$SLACK_WEBHOOK"
-        - channel_on_error: ''
-        - text_on_error: ''
-        - emoji_on_error: ":sob:"
+        - footer: ""
+        - webhook_url_on_error: $SLACK_WEBHOOK
+        - channel_on_error: ""
+        - text_on_error: ""
+        - emoji_on_error: ':sob:'
         - from_username_on_error: Flutter Min App
-        - text: ''
+        - text: ""
         - buttons: |
             View App|${BITRISE_APP_URL}
             View Build|${BITRISE_BUILD_URL}
             App Center Android|${APPCENTER_URL_ANDROID}
             App Center iOS|${APPCENTER_URL_IOS}
-        - pretext: "*:tada: Flutter Min App Build Succeeded! :tada:*"
-        - pretext_on_error: "*Oh no, Build Failed! :sob:*"
-        - webhook_url: "$SLACK_WEBHOOK"
+        - pretext: '*:tada: Flutter Min App Build Succeeded! :tada:*'
+        - pretext_on_error: '*Oh no, Build Failed! :sob:*'
+        - webhook_url: $SLACK_WEBHOOK
 meta:
   bitrise.io:
-    stack: osx-xcode-14.0.x
+    stack: osx-xcode-14.3.x-ventura
     machine_type_id: g2.4core
 app:
   envs:
   - opts:
       is_expand: false
-    BITRISE_FLUTTER_PROJECT_LOCATION: "."
+    BITRISE_FLUTTER_PROJECT_LOCATION: .
   - opts:
       is_expand: false
     FLUTTER_PLUGIN_GIT_REPO: git@github.com:Bluedot-Innovation/PointSDK-Flutter-Plugin.git
@@ -364,30 +363,30 @@ app:
     APPCENTER_APP_NAME_ANDROID: Flutter-Min-App-1
   - opts:
       is_expand: false
-    GRADLEW_PATH: "./android/gradlew"
+    GRADLEW_PATH: ./android/gradlew
   - opts:
       is_expand: false
-    BITRISE_PROJECT_PATH: "./ios/Runner.xcworkspace"
+    BITRISE_PROJECT_PATH: ./ios/Runner.xcworkspace
   - opts:
       is_expand: false
     BITRISE_SCHEME: Runner
   - opts:
       is_expand: false
-    IOS_INFO_PLIST: "./ios/Runner/Info.plist"
+    IOS_INFO_PLIST: ./ios/Runner/Info.plist
   - opts:
       is_expand: false
-    APP_RELEASE_NOTES_FILE: "./ReleaseNotes.md"
+    APP_RELEASE_NOTES_FILE: ./ReleaseNotes.md
   - opts:
       is_expand: false
-    PUBSPEC_YAML_FILE: "./pubspec.yaml"
+    PUBSPEC_YAML_FILE: ./pubspec.yaml
   - opts:
       is_expand: false
     FLUTTER_PLUGIN_NAME: PointSDK-Flutter-Plugin
   - opts:
       is_expand: false
-    PACKAGE_JSON_FILE: "./.dart_tool/package_config.json"
+    PACKAGE_JSON_FILE: ./.dart_tool/package_config.json
 trigger_map:
 - push_branch: release/*
   workflow: min-app
-- tag: "*-pre+build*"
+- tag: '*-pre+build*'
   workflow: downstream
