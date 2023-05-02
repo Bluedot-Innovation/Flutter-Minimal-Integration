@@ -13,8 +13,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "dn/1.0.1"
-      resolved-ref: dd64d66d9ead3d6d81ed8094471c3fe579978092
+      ref: "release/1.0.1"
+      resolved-ref: "3810a7cd0de80d0892abf40b69aeabbe7211c007"
       url: "git@github.com:Bluedot-Innovation/PointSDK-Flutter-Plugin.git"
     source: git
     version: "1.0.1"
