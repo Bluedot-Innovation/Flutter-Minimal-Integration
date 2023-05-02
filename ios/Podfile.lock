@@ -42,9 +42,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppCenter: 355ba776b273d30147c3ac385c558bec60a7d4b1
-  bluedot_point_sdk: 96fb38d6cfe15fcbd6672ad25012aef25c080251
+  bluedot_point_sdk: 1ed5b9334c61d26a193d88c26e796399b44e92b7
   BluedotPointSDK: 9e88bda0f6b76839bcca15c85b27155e385ed72f
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
 
