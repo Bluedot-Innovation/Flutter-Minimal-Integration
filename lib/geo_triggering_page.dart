@@ -116,8 +116,8 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
 
     /// set a custom notification icon for GeoTriggering/Tempo service Foreground Notification in Android
     /// By default the Bluedot PointSDK uses `ic_stat_name`, only need to call this if you want to set a different icon.
-    /// IMPORTANT: Make sure Notification Icon is set prior to starting GeoTriggering
-    // BluedotPointSdk.instance.setNotificationIcon('ic_stat_name');
+    /// IMPORTANT: Make sure setNotificationIcon()  is called prior to starting GeoTriggering
+    // BluedotPointSdk.instance.setNotificationIcon('some_notification_icon');
 
     // Handle geo triggering events
     geoTriggeringEventChannel.setMethodCallHandler((MethodCall call) async {
