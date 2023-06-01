@@ -338,7 +338,7 @@ workflows:
 meta:
   bitrise.io:
     stack: osx-xcode-14.3.x-ventura
-    machine_type_id: g2.4core
+    machine_type_id: g2-m1.4core
 app:
   envs:
     - opts:
