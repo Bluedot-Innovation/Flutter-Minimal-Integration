@@ -105,6 +105,9 @@ class _TempoPageState extends State<TempoPage> {
       var args = call.arguments;
       var tempoAlertTitle = 'Tempo Events';
       switch (call.method) {
+        case TempoEvents.tempoTrackingUpdated:
+          showAlert(tempoAlertTitle, 'Tempo Tracking Updated: $args', context);
+          break;
         case TempoEvents.tempoTrackingStoppedWithError:
           var errorCode = args['code'];
           var errorMessage = args['message'];
