@@ -113,6 +113,10 @@ class _TempoPageState extends State<TempoPage> {
             _updateTempoStatus();
           });
           break;
+        case TempoEvents.tempoTrackingDidUpdate:
+          debugPrint('Tempo Tracking Update: $args');
+          showAlert(tempoAlertTitle, 'Tempo Tracking Update: $args', context);
+          break;
         default:
           break;
       }
