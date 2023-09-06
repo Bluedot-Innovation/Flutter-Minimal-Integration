@@ -124,7 +124,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
       var args = call.arguments;
       var geoTriggeringAlertTitle = 'Geo-Triggering Events';
       switch (call.method) {
-        case GeoTriggeringEvents.onZoneInfoUpdate:
+        case GeoTriggeringEvents.didUpdateZoneInfo:
           debugPrint('On Zone Info Update: $args');
           showAlert(
               geoTriggeringAlertTitle, 'On Zone Info Update: $args', context);
