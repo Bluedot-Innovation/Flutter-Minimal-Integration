@@ -7,12 +7,12 @@ PODS:
   - AppCenter/Core (5.0.2)
   - AppCenter/Crashes (5.0.2):
     - AppCenter/Core
-  - bluedot_point_sdk (1.0.1):
-    - BluedotPointSDK (= 16.0.0-rc4)
+  - bluedot_point_sdk (2.0.0):
+    - BluedotPointSDK (= 16.0.0)
     - Flutter
-  - BluedotPointSDK (16.0.0-rc4)
+  - BluedotPointSDK (16.0.0)
   - Flutter (1.0.0)
-  - permission_handler_apple (9.0.4):
+  - permission_handler_apple (9.3.0):
     - Flutter
   - shared_preferences_foundation (0.0.1):
     - Flutter
@@ -42,12 +42,12 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppCenter: 355ba776b273d30147c3ac385c558bec60a7d4b1
-  bluedot_point_sdk: 8d660ceffc7cfb99d4a5a60975f68e569d69493f
-  BluedotPointSDK: 310805b77936c51166f42f9f8d7ff1336a90f8ac
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
+  bluedot_point_sdk: bd8ac26ea92fdd5ec2ed09de2c376d633ea68dce
+  BluedotPointSDK: 2f28e12f05b24fdcd4bca5707c799d1d906b41af
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
 
 PODFILE CHECKSUM: 6a1bb9de5d6faccc5c5ada5c1e04911b539fdd2d
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.15.2
