@@ -15,6 +15,9 @@ workflows:
           inputs:
             - is_debug: "true"
       - cache-pull@2: {}
+      - set-java-version@1:
+          inputs:
+            - set_java_version: '17'
       - script@1:
           inputs:
             - content: |-
@@ -202,6 +205,9 @@ workflows:
             - is_update: "false"
             - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.7.12-stable.zip
             - is_debug: "true"
+      - set-java-version@1:
+          inputs:
+            - set_java_version: '17'
       - script@1:
           title: Install yq
           inputs:
