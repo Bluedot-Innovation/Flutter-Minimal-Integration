@@ -262,7 +262,7 @@ workflows:
         inputs:
         - new_version_name: $FLUTTER_VERSION
         - build_gradle_path: $BITRISE_SOURCE_DIR/android/app/build.gradle
-    - set-xcode-build-number@1:
+    - set-xcode-build-number@2:
         is_always_run: true
         inputs:
         - build_short_version_string: $FLUTTER_VERSION
@@ -290,7 +290,7 @@ workflows:
         inputs:
         - destination_keys: APPCENTER_URL_ANDROID
         - value: https://appcenter.ms/orgs/$APPCENTER_OWNER/apps/$APPCENTER_APP_NAME_ANDROID/distribute/releases/$APPCENTER_DEPLOY_RELEASE_ID
-    - xcode-archive@4:
+    - xcode-archive@5:
         is_always_run: true
         inputs:
         - automatic_code_signing: api-key
@@ -315,7 +315,7 @@ workflows:
         inputs:
         - is_enable_public_page: "false"
         - notify_user_groups: none
-    - slack@3:
+    - slack@4:
         inputs:
         - channel: ""
         - emoji: ':tada:'
