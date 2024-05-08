@@ -29,6 +29,17 @@ class _HomePageState extends State<HomePage> {
       });
     });
 
+   //Set CustomEventMetaData
+   final Map<String, String> someMap = {
+     "key1": "MinApp",
+     "Key2": "TestData",
+   };
+   BluedotPointSdk.instance.setCustomEventMetaData(someMap);
+
+   //Get CustomEventMetaData and print in log
+   BluedotPointSdk.instance.getCustomEventMetaData().then((value) {
+      print(value);
+    });
     _retrieveProjectId();
   }
 
