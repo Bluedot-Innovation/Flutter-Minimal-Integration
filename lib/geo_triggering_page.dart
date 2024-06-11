@@ -16,7 +16,7 @@ class GeoTriggeringPage extends StatefulWidget {
 
 class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   bool _isGeoTriggeringRunning = false;
-  bool _isBackgroundLocationUpdateEnabled = false;
+  bool _isBackgroundLocationUpdateEnabled = true;
   final geoTriggeringEventChannel = const MethodChannel(BluedotPointSdk
       .geoTriggering); // Method channel to listen to geo triggering events
 
@@ -95,7 +95,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   }
 
   void _allowsBackgroundLocationUpdates(bool value) {
-    BluedotPointSdk.instance.allowsBackgroundLocationUpdates(value);
+    BluedotPointSdk.instance.backgroundLocationAccessForWhileUsing(value);
     setState(() {
       _isBackgroundLocationUpdateEnabled = value;
       saveBool(isBackgroundLocationUpdateString, value);
