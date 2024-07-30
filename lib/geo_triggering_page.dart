@@ -83,18 +83,15 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
         // Handle successful start of geo-triggering
         _updateGeoTriggeringStatus();
       }).catchError((error) {
-        // Handle failed start of geo-triggering, handle error in here
-        String errorMessage = error.toString();
-        if (error is PlatformException) {
-          errorMessage = error.message!;
-        }
-        showAlert('Fail to start geo triggering with notification',
-            errorMessage, context);
+          // Handle failed start of geo-triggering, handle error in here
+          String errorMessage = error.toString();
+          if (error is PlatformException) {
+             errorMessage = error.message!;
+          }
+          showAlert('Fail to start geo triggering with notification',
+              errorMessage, context);
       });
-      showAlert('set Android notification','Android', context);
-      }
-
-
+     }
   }
 
   /// Stop Geo-Triggering
