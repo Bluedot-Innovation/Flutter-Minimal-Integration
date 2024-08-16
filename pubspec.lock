@@ -12,11 +12,9 @@ packages:
   bluedot_point_sdk:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "nk/BD-4936-backgroundLocationAccessForWhileUsing"
-      resolved-ref: b64447e40a861c1307f1ed6720e059fcea0881f2
-      url: "https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git"
-    source: git
+      path: "/Users/nehaishwar/PointSDK-Flutter-Plugin"
+      relative: false
+    source: path
     version: "2.0.0"
   boolean_selector:
     dependency: transitive
