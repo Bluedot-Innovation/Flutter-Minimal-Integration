@@ -16,7 +16,7 @@ class GeoTriggeringPage extends StatefulWidget {
 
 class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   bool _isGeoTriggeringRunning = false;
-  bool _isBackgroundLocationUpdateEnabled = false;
+  bool _isBackgroundLocationUpdateEnabled = true;
   final geoTriggeringEventChannel = const MethodChannel(BluedotPointSdk
       .geoTriggering); // Method channel to listen to geo triggering events
 
@@ -38,35 +38,60 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   }
 
   /// Start Geo Triggering in iOS and Android (foreground mode)
-  void _startGeoTriggeringWithAndroidNotification() {
-    String androidNotificationTitle =
-        'Bluedot Foreground Service - Geo-triggering';
-    String androidNotificationContent =
-        'This app is running a foreground service using location service';
-    int androidNotificationId = 123;
+  void _startGeoTriggeringNotification() {
+     if (Platform.isIOS) {
+      String iosAppRestartNotificationTitle =
+          'Restart Bluedot Service';
+      String iosAppRestartNotificationButtonText =
+          'Restart';
 
-    BluedotPointSdk.instance
-        .geoTriggeringBuilder()
-        // Setting notification details for Android foreground service
-        .androidNotification(
-            bluedotChannelId,
-            bluedotChannelName,
-            androidNotificationTitle,
-            androidNotificationContent,
-            androidNotificationId)
-        .start()
-        .then((value) {
-      // Handle successful start of geo-triggering
-      _updateGeoTriggeringStatus();
-    }).catchError((error) {
-      // Handle failed start of geo-triggering, handle error in here
-      String errorMessage = error.toString();
-      if (error is PlatformException) {
-        errorMessage = error.message!;
-      }
-      showAlert('Fail to start geo triggering with android notification',
-          errorMessage, context);
-    });
+      BluedotPointSdk.instance
+          .geoTriggeringBuilder().iosNotification(
+        iosAppRestartNotificationTitle,
+        iosAppRestartNotificationButtonText)
+          .start()
+          .then((value) {
+        // Handle successful start of geo-triggering
+        _updateGeoTriggeringStatus();
+      }).catchError((error) {
+        // Handle failed start of geo-triggering, handle error in here
+        String errorMessage = error.toString();
+        if (error is PlatformException) {
+          errorMessage = error.message!;
+        }
+        showAlert('Fail to start geo triggering with notification',
+            errorMessage, context);
+      });
+    } else {
+
+      String androidNotificationTitle =
+          'Bluedot Foreground Service - Geo-triggering';
+      String androidNotificationContent =
+          'This app is running a foreground service using location service';
+      int androidNotificationId = 123;
+
+      // Setting notification details for Android foreground service
+      BluedotPointSdk.instance
+          .geoTriggeringBuilder().androidNotification(
+              bluedotChannelId,
+              bluedotChannelName,
+              androidNotificationTitle,
+              androidNotificationContent,
+              androidNotificationId)
+          .start()
+          .then((value) {
+        // Handle successful start of geo-triggering
+        _updateGeoTriggeringStatus();
+      }).catchError((error) {
+          // Handle failed start of geo-triggering, handle error in here
+          String errorMessage = error.toString();
+          if (error is PlatformException) {
+             errorMessage = error.message!;
+          }
+          showAlert('Fail to start geo triggering with notification',
+              errorMessage, context);
+      });
+     }
   }
 
   /// Stop Geo-Triggering
@@ -95,7 +120,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   }
 
   void _allowsBackgroundLocationUpdates(bool value) {
-    BluedotPointSdk.instance.allowsBackgroundLocationUpdates(value);
+    BluedotPointSdk.instance.backgroundLocationAccessForWhileUsing(value);
     setState(() {
       _isBackgroundLocationUpdateEnabled = value;
       saveBool(isBackgroundLocationUpdateString, value);
@@ -177,11 +202,10 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
                   ],
                   Text('Is Geo Triggering Running: $_isGeoTriggeringRunning'),
                   if (!_isGeoTriggeringRunning) ...[
-                    if (Platform.isAndroid) ...[
                       ElevatedButton(
-                          onPressed: _startGeoTriggeringWithAndroidNotification,
+                          onPressed: _startGeoTriggeringNotification,
                           child: const Text('Start with android notification')),
-                    ],
+
                     ElevatedButton(
                         onPressed: _startGeoTriggering,
                         child: const Text('Start')),
