@@ -365,12 +365,12 @@ app:
   - opts:
       is_expand: false
     PACKAGE_JSON_FILE: ./.dart_tool/package_config.json
-  - opts:
+  - APPSTORE_ID: "6751217428"
+    opts:
       is_expand: false
-    APPSTORE_ID: 6751217428    
-  - opts:
+  - APP_STORE_INTERNAL_TESTERS: Internal
+    opts:
       is_expand: false
-    APP_STORE_INTERNAL_TESTERS: Internal    
 trigger_map:
 - push_branch: release/*
   workflow: min-app
