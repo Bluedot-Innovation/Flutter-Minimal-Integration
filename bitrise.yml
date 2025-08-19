@@ -283,6 +283,7 @@ workflows:
         - api_key_path: ""
         - automatic_code_signing: api-key
     - deploy-to-itunesconnect-deliver@2:
+        is_always_run: true
         inputs:
         - connection: api_key
         - app_id: $APPSTORE_ID
