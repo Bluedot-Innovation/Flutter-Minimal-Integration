@@ -274,12 +274,20 @@ workflows:
         - destination_keys: APPCENTER_URL_ANDROID
         - value: https://appcenter.ms/orgs/$APPCENTER_OWNER/apps/$APPCENTER_APP_NAME_ANDROID/distribute/releases/$APPCENTER_DEPLOY_RELEASE_ID
     - xcode-archive@5:
+        title: Archive Build
         is_always_run: true
         inputs:
+        - distribution_method: app-store
+        - configuration: Release
+        - artifact_name: ""
+        - api_key_path: ""
         - automatic_code_signing: api-key
-        - compile_bitcode: "no"
-        - upload_bitcode: "no"
-        - distribution_method: ad-hoc
+    - deploy-to-itunesconnect-deliver@2:
+        inputs:
+        - connection: api_key
+        - app_id: $APPSTORE_ID
+        - distribute_external: "no"  # Internal testing only
+        - groups: $APP_STORE_INTERNAL_TESTERS   
     - set-env-var@0:
         title: Save AppCenter iOS install URL
         inputs:
@@ -357,6 +365,12 @@ app:
   - opts:
       is_expand: false
     PACKAGE_JSON_FILE: ./.dart_tool/package_config.json
+  - opts:
+      is_expand: false
+    APPSTORE_ID: 6751217428    
+  - opts:
+      is_expand: false
+    APP_STORE_INTERNAL_TESTERS: Internal    
 trigger_map:
 - push_branch: release/*
   workflow: min-app
