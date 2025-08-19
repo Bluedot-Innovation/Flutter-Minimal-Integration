@@ -97,12 +97,6 @@ workflows:
             echo "Found package version: ${FLUTTER_PLUGIN_VERSION}"
 
             envman add --key FLUTTER_PLUGIN_VERSION --value "${FLUTTER_PLUGIN_VERSION}"
-    - change-value@2:
-        title: Update AppCenter secret Android
-        inputs:
-        - new_value: $APPCENTER_SECRET_ANDROID
-        - file: ./android/app/src/main/kotlin/io/bluedot/flutter_minimal_app/MainActivity.kt
-        - old_value: APPCENTER_SECRET_ANDROID
     - install-missing-android-tools@3:
         is_always_run: true
     - change-android-versioncode-and-versionname@1:
@@ -124,20 +118,6 @@ workflows:
         inputs:
         - use_apk_signer: "true"
         - android_app: $BITRISE_APK_PATH
-    - appcenter-deploy-android@2:
-        inputs:
-        - owner_name: $APPCENTER_OWNER
-        - app_name: $APPCENTER_APP_NAME_ANDROID
-        - distribution_group: $APPCENTER_DISTRIBUTION_GROUPS
-        - release_notes: $RELEASE_NOTES
-        - notify_testers: "no"
-        - app_path: $BITRISE_APK_PATH
-        - api_token: $APPCENTER_TOKEN
-    - set-env-var@0:
-        title: Save AppCenter Android URL
-        inputs:
-        - destination_keys: APPCENTER_URL_ANDROID
-        - value: https://appcenter.ms/orgs/$APPCENTER_OWNER/apps/$APPCENTER_APP_NAME_ANDROID/distribute/releases/$APPCENTER_DEPLOY_RELEASE_ID
     - xcode-archive@5:
         is_always_run: true
         inputs:
@@ -145,11 +125,6 @@ workflows:
         - compile_bitcode: "no"
         - upload_bitcode: "no"
         - distribution_method: ad-hoc
-    - set-env-var@0:
-        title: Save AppCenter iOS install URL
-        inputs:
-        - value: https://appcenter.ms/orgs/$APPCENTER_OWNER/apps/$APPCENTER_APP_NAME_IOS/distribute/releases/$APPCENTER_DEPLOY_RELEASE_ID
-        - destination_keys: APPCENTER_URL_IOS
     - cache-push@2: {}
     - deploy-to-bitrise-io@2:
         inputs:
@@ -170,7 +145,6 @@ workflows:
         - buttons: |
             View App|${BITRISE_APP_URL}
             View Build|${BITRISE_BUILD_URL}
-            App Center Android|${APPCENTER_URL_ANDROID}
         - pretext: '*:tada: Flutter Min App Downstream Build Succeeded! :tada:*'
         - pretext_on_error: '*Oh no, Build Failed! :sob:*'
         - webhook_url: $SLACK_WEBHOOK
@@ -232,12 +206,6 @@ workflows:
             echo "Found version: ${FLUTTER_VERSION}"
 
             envman add --key FLUTTER_VERSION --value "${FLUTTER_VERSION}"
-    - change-value@2:
-        title: Update AppCenter secret Android
-        inputs:
-        - new_value: $APPCENTER_SECRET_ANDROID
-        - file: ./android/app/src/main/kotlin/io/bluedot/flutter_minimal_app/MainActivity.kt
-        - old_value: APPCENTER_SECRET_ANDROID
     - install-missing-android-tools@3:
         is_always_run: true
     - change-android-versioncode-and-versionname@1:
@@ -259,20 +227,6 @@ workflows:
         inputs:
         - use_apk_signer: "true"
         - android_app: $BITRISE_APK_PATH
-    - appcenter-deploy-android@2:
-        inputs:
-        - owner_name: $APPCENTER_OWNER
-        - app_name: $APPCENTER_APP_NAME_ANDROID
-        - distribution_group: $APPCENTER_DISTRIBUTION_GROUPS
-        - release_notes: $RELEASE_NOTES
-        - notify_testers: "no"
-        - app_path: $BITRISE_APK_PATH
-        - api_token: $APPCENTER_TOKEN
-    - set-env-var@0:
-        title: Save AppCenter Android URL
-        inputs:
-        - destination_keys: APPCENTER_URL_ANDROID
-        - value: https://appcenter.ms/orgs/$APPCENTER_OWNER/apps/$APPCENTER_APP_NAME_ANDROID/distribute/releases/$APPCENTER_DEPLOY_RELEASE_ID
     - xcode-archive@5:
         title: Archive Build
         is_always_run: true
@@ -289,11 +243,6 @@ workflows:
         - app_id: $APPSTORE_ID
         - distribute_external: "no"  # Internal testing only
         - groups: $APP_STORE_INTERNAL_TESTERS   
-    - set-env-var@0:
-        title: Save AppCenter iOS install URL
-        inputs:
-        - value: https://appcenter.ms/orgs/$APPCENTER_OWNER/apps/$APPCENTER_APP_NAME_IOS/distribute/releases/$APPCENTER_DEPLOY_RELEASE_ID
-        - destination_keys: APPCENTER_URL_IOS
     - cache-push@2: {}
     - deploy-to-bitrise-io@2:
         inputs:
@@ -314,7 +263,6 @@ workflows:
         - buttons: |
             View App|${BITRISE_APP_URL}
             View Build|${BITRISE_BUILD_URL}
-            App Center Android|${APPCENTER_URL_ANDROID}
         - pretext: '*:tada: Flutter Min App Build Succeeded! :tada:*'
         - pretext_on_error: '*Oh no, Build Failed! :sob:*'
         - webhook_url: $SLACK_WEBHOOK
@@ -330,18 +278,6 @@ app:
   - opts:
       is_expand: false
     FLUTTER_PLUGIN_GIT_REPO: git@github.com:Bluedot-Innovation/PointSDK-Flutter-Plugin.git
-  - opts:
-      is_expand: false
-    APPCENTER_APP_NAME_IOS: Flutter-Min-App
-  - opts:
-      is_expand: false
-    APPCENTER_DISTRIBUTION_GROUPS: Collaborators
-  - opts:
-      is_expand: false
-    APPCENTER_OWNER: bluedot
-  - opts:
-      is_expand: false
-    APPCENTER_APP_NAME_ANDROID: Flutter-Min-App-1
   - opts:
       is_expand: false
     GRADLEW_PATH: ./android/gradlew
