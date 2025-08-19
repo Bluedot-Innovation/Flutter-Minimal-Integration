@@ -4,7 +4,7 @@ project_type: flutter
 workflows:
   downstream:
     description: |
-      Builds project and runs tests.
+      Prebuid the project with Git version of the plugin and runs tests.
 
       Next steps:
       - Check out [Getting started with Flutter apps](https://devcenter.bitrise.io/en/getting-started/getting-started-with-flutter-apps.html).
@@ -103,13 +103,6 @@ workflows:
         - new_value: $APPCENTER_SECRET_ANDROID
         - file: ./android/app/src/main/kotlin/io/bluedot/flutter_minimal_app/MainActivity.kt
         - old_value: APPCENTER_SECRET_ANDROID
-    - change-value@2:
-        title: Update AppCenter secret iOS
-        is_always_run: true
-        inputs:
-        - old_value: APPCENTER_SECRET_IOS
-        - new_value: $APPCENTER_SECRET_IOS
-        - file: ./ios/Runner/AppDelegate.swift
     - install-missing-android-tools@3:
         is_always_run: true
     - change-android-versioncode-and-versionname@1:
@@ -152,14 +145,6 @@ workflows:
         - compile_bitcode: "no"
         - upload_bitcode: "no"
         - distribution_method: ad-hoc
-    - appcenter-deploy-ios@2:
-        inputs:
-        - owner_name: $APPCENTER_OWNER
-        - app_name: $APPCENTER_APP_NAME_IOS
-        - distribution_group: $APPCENTER_DISTRIBUTION_GROUPS
-        - release_notes: $RELEASE_NOTES
-        - notify_testers: "no"
-        - api_token: $APPCENTER_TOKEN
     - set-env-var@0:
         title: Save AppCenter iOS install URL
         inputs:
@@ -186,7 +171,6 @@ workflows:
             View App|${BITRISE_APP_URL}
             View Build|${BITRISE_BUILD_URL}
             App Center Android|${APPCENTER_URL_ANDROID}
-            App Center iOS|${APPCENTER_URL_IOS}
         - pretext: '*:tada: Flutter Min App Downstream Build Succeeded! :tada:*'
         - pretext_on_error: '*Oh no, Build Failed! :sob:*'
         - webhook_url: $SLACK_WEBHOOK
@@ -254,13 +238,6 @@ workflows:
         - new_value: $APPCENTER_SECRET_ANDROID
         - file: ./android/app/src/main/kotlin/io/bluedot/flutter_minimal_app/MainActivity.kt
         - old_value: APPCENTER_SECRET_ANDROID
-    - change-value@2:
-        title: Update AppCenter secret iOS
-        is_always_run: true
-        inputs:
-        - old_value: APPCENTER_SECRET_IOS
-        - new_value: $APPCENTER_SECRET_IOS
-        - file: ./ios/Runner/AppDelegate.swift
     - install-missing-android-tools@3:
         is_always_run: true
     - change-android-versioncode-and-versionname@1:
@@ -303,14 +280,6 @@ workflows:
         - compile_bitcode: "no"
         - upload_bitcode: "no"
         - distribution_method: ad-hoc
-    - appcenter-deploy-ios@2:
-        inputs:
-        - owner_name: $APPCENTER_OWNER
-        - app_name: $APPCENTER_APP_NAME_IOS
-        - distribution_group: $APPCENTER_DISTRIBUTION_GROUPS
-        - release_notes: $RELEASE_NOTES
-        - notify_testers: "no"
-        - api_token: $APPCENTER_TOKEN
     - set-env-var@0:
         title: Save AppCenter iOS install URL
         inputs:
@@ -337,13 +306,12 @@ workflows:
             View App|${BITRISE_APP_URL}
             View Build|${BITRISE_BUILD_URL}
             App Center Android|${APPCENTER_URL_ANDROID}
-            App Center iOS|${APPCENTER_URL_IOS}
         - pretext: '*:tada: Flutter Min App Build Succeeded! :tada:*'
         - pretext_on_error: '*Oh no, Build Failed! :sob:*'
         - webhook_url: $SLACK_WEBHOOK
 meta:
   bitrise.io:
-    stack: osx-xcode-15.1.x
+    stack: osx-xcode-16.4.x
     machine_type_id: g2-m1.4core
 app:
   envs:
