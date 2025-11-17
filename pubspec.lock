@@ -12,11 +12,12 @@ packages:
   bluedot_point_sdk:
     dependency: "direct main"
     description:
-      name: bluedot_point_sdk
-      sha256: "8955b164d5f619e53f3fc60ba8527af2d51703a1729067112c614c15bf76ca18"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
+      path: "."
+      ref: "fix/br-crash"
+      resolved-ref: "0ed8840686640bea45c4e19073a04d63fc31b7c4"
+      url: "https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git"
+    source: git
+    version: "2.0.2"
   boolean_selector:
     dependency: transitive
     description:
