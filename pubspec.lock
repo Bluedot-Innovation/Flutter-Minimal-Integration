@@ -14,7 +14,7 @@ packages:
     description:
       path: "."
       ref: "fix/br-crash"
-      resolved-ref: "0ed8840686640bea45c4e19073a04d63fc31b7c4"
+      resolved-ref: "6506f32b4481663d16ea355be3faa1f27034ebe2"
       url: "https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git"
     source: git
     version: "2.0.2"
