@@ -14,10 +14,10 @@ packages:
     description:
       path: "."
       ref: "dev/2.1.0"
-      resolved-ref: d62b6273c5d38afbbd3d6455a62eeff8640f26e1
+      resolved-ref: "0f5414243c2188b7458d540f23d020c07344c6ee"
       url: "https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git"
     source: git
-    version: "2.0.1"
+    version: "2.1.0"
   boolean_selector:
     dependency: transitive
     description:
