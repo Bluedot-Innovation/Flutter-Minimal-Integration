@@ -142,23 +142,47 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
       debugPrint('Zones and Fences received: ${jsonEncode(zones)}');
     
       for (var zone in zones) {
-        debugPrint('Zone: ${zone['name']} (ID: ${zone['ID']})');
-        // Access destination->customData
-        if (zone['destination'] != null) {
-          var destination = zone['destination'];
-          debugPrint('Destination: ${destination['name']}');
-        
-          if (destination['customData'] != null) {
-            var customData = destination['customData'];
-            debugPrint('Destination Custom Data: $customData');
-            showAlert('On Zone Info Update', 'Destination Custom Data: $customData', context);
+        if (Platform.isIOS) {
+          debugPrint('Zone: ${zone['name']} (ID: ${zone['ID']})');
+          // Access destination->customData
+          if (zone['destination'] != null) {
+            var destination = zone['destination'];
+            debugPrint('Destination: ${destination['name']}');
+
+            if (destination['customData'] != null) {
+              var customData = destination['customData'];
+              debugPrint('Destination Custom Data: $customData');
+              showAlert(
+                  'On Zone Info Update', 'Destination Custom Data: $customData',
+                  context);
+            } else {
+              debugPrint('No custom data for destination');
+            }
           } else {
-            debugPrint('No custom data for destination');
+            debugPrint('No destination for zone: ${zone['name']}');
           }
-        } else {
-        debugPrint('No destination for zone: ${zone['name']}');
+        } else if (Platform.isAndroid) {
+          debugPrint('Zone: ${zone['zoneName']} (ID: ${zone['zoneId']})');
+          // Access destination->customData
+          if (zone['destination'] != null) {
+            var destination = zone['destination'];
+            debugPrint('Destination: ${destination['name']}');
+
+            if (destination['customData'] != null) {
+              var customData = destination['customData'];
+              debugPrint('Destination Custom Data: $customData');
+              showAlert(
+                  'On Zone Info Update', 'Destination Custom Data: $customData',
+                  context);
+            } else {
+              debugPrint('No custom data for destination');
+            }
+          } else {
+            debugPrint('No destination for zone: ${zone['name']}');
+          }
         }
-        }
+
+      }
       }).catchError((error) {
       debugPrint('Error getting zones and fences: $error');
     });
