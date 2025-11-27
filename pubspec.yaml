@@ -35,7 +35,7 @@ dependencies:
     # the parent directory to use the current plugin's version.
     git:
       url: https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git
-      ref: dev/2.1.0
+      ref: ni/test
 #    bluedot_point_sdk:
 #    path: ../PointSDK-Flutter-Plugin  # Relative path to the plugin folder
 

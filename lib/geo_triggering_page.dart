@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
 import 'package:flutter/material.dart';
@@ -137,7 +138,8 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
 
   void _getZonesAndFences() {
     BluedotPointSdk.instance.getZonesAndFences().then((zones) {
-      debugPrint('Zones and Fences received: $zones');
+      debugPrint('Zones and Fences received');
+      debugPrint('Zones and Fences received: ${jsonEncode(zones)}');
     
       for (var zone in zones) {
         debugPrint('Zone: ${zone['name']} (ID: ${zone['ID']})');
