@@ -140,7 +140,6 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
     BluedotPointSdk.instance.getZonesAndFences().then((zones) {
       debugPrint('Zones and Fences received');
       debugPrint('Zones and Fences received: ${jsonEncode(zones)}');
-    
       for (var zone in zones) {
         if (Platform.isIOS) {
           debugPrint('Zone: ${zone['name']} (ID: ${zone['ID']})');
@@ -178,7 +177,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
               debugPrint('No custom data for destination');
             }
           } else {
-            debugPrint('No destination for zone: ${zone['name']}');
+            debugPrint('No destination for zone: ${zone['zoneName']}');
           }
         }
 
