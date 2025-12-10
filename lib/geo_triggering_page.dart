@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
 import 'package:flutter/material.dart';
@@ -135,6 +136,57 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
     });
   }
 
+  void _getZonesAndFences() {
+    BluedotPointSdk.instance.getZonesAndFences().then((zones) {
+      debugPrint('Zones and Fences received');
+      debugPrint('Zones and Fences received: ${jsonEncode(zones)}');
+      for (var zone in zones) {
+        if (Platform.isIOS) {
+          debugPrint('Zone: ${zone['name']} (ID: ${zone['ID']})');
+          // Access destination->customData
+          if (zone['destination'] != null) {
+            var destination = zone['destination'];
+            debugPrint('Destination: ${destination['name']}');
+
+            if (destination['customData'] != null) {
+              var customData = destination['customData'];
+              debugPrint('Destination Custom Data: $customData');
+              showAlert(
+                  'On Zone Info Update', 'Destination Custom Data: $customData',
+                  context);
+            } else {
+              debugPrint('No custom data for destination');
+            }
+          } else {
+            debugPrint('No destination for zone: ${zone['name']}');
+          }
+        } else if (Platform.isAndroid) {
+          debugPrint('Zone: ${zone['zoneName']} (ID: ${zone['zoneId']})');
+          // Access destination->customData
+          if (zone['destination'] != null) {
+            var destination = zone['destination'];
+            debugPrint('Destination: ${destination['name']}');
+
+            if (destination['customData'] != null) {
+              var customData = destination['customData'];
+              debugPrint('Destination Custom Data: $customData');
+              showAlert(
+                  'On Zone Info Update', 'Destination Custom Data: $customData',
+                  context);
+            } else {
+              debugPrint('No custom data for destination');
+            }
+          } else {
+            debugPrint('No destination for zone: ${zone['zoneName']}');
+          }
+        }
+
+      }
+      }).catchError((error) {
+      debugPrint('Error getting zones and fences: $error');
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -151,8 +203,8 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
       switch (call.method) {
         case GeoTriggeringEvents.didUpdateZoneInfo:
           debugPrint('On Zone Info Update: $args');
-          showAlert(
-              geoTriggeringAlertTitle, 'On Zone Info Update: $args', context);
+          
+          _getZonesAndFences();
           break;
         case GeoTriggeringEvents.didEnterZone:
           debugPrint('Did Enter Zone: $args');
