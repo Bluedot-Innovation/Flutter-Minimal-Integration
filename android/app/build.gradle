@@ -29,10 +29,10 @@ if (flutterVersionName == null) {
 
 
 android {
-    ndkVersion "28.2.13676358"
+    ndkVersion = "28.2.13676358"
     compileSdk 36
 
-    namespace "io.bluedot.flutter_minimal_app"
+    namespace = "io.bluedot.flutter_minimal_app"
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -48,7 +48,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "io.bluedot.flutter_minimal_app"
+        applicationId = "io.bluedot.flutter_minimal_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion 26
@@ -61,13 +61,13 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig = signingConfigs.debug
         }
     }
 }
 
 flutter {
-    source '../..'
+    source = '../..'
 }
 
 dependencies {
