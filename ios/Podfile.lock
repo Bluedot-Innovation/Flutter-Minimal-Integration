@@ -1,8 +1,8 @@
 PODS:
-  - bluedot_point_sdk (2.1.0):
-    - BluedotPointSDK (= 17.1.0)
+  - bluedot_point_sdk (2.1.1):
+    - BluedotPointSDK (= 17.2.0)
     - Flutter
-  - BluedotPointSDK (17.1.0)
+  - BluedotPointSDK (17.2.0)
   - Flutter (1.0.0)
   - permission_handler_apple (9.3.0):
     - Flutter
@@ -31,11 +31,11 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
-  bluedot_point_sdk: 4e9aaac65177157b7fdf1029cc4f6a03a7503cc5
-  BluedotPointSDK: 1807029a23c80b95df914627904e89678ee84fa5
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  bluedot_point_sdk: f0f89a4503c8f2cd4515bfb5e0a24c248ffcefe2
+  BluedotPointSDK: 46db4abe89d9b90981808c5e382dcd8076c333a9
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
-  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
 
 PODFILE CHECKSUM: 1770f29565c64955b79c0300f4b6c99dd321a0d0
 
