@@ -236,6 +236,11 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
           debugPrint('Did Exit Zone: $args');
           showAlert(geoTriggeringAlertTitle, 'Did Exit Zone: $args', context);
           break;
+
+        case GeoTriggeringEvents.didDwellInZone:
+          debugPrint('Did dwell Zone: $args');
+          showAlert(geoTriggeringAlertTitle, 'Did dwell Zone: $args', context);
+          break;
         default:
           break;
       }
