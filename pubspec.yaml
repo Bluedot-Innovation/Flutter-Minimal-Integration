@@ -26,19 +26,9 @@ dependencies:
   flutter:
     sdk: flutter
   permission_handler: ^11.0.0
-  shared_preferences: ^2.0.15
-  bluedot_point_sdk: 2.1.1
-#    git:
-#      url: https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git
-#      ref: dev/2.1.1
-#    # When depending on this package from a real application you should use:
-    #   bluedot_point_sdk: ^x.y.z (^1.0.1)
-    # See https://dart.dev/tools/pub/dependencies#version-constraints
-    # The example app is bundled with the plugin so we use a path dependency on
-    # the parent directory to use the current plugin's version.
-
-#    bluedot_point_sdk:
-#    path: ../PointSDK-Flutter-Plugin  # Relative path to the plugin folder
+  shared_preferences: ^2.4.23
+  bluedot_point_sdk:
+    path: ../
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -46,12 +36,18 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^2.0.0
+
+dependency_overrides:
+  # 22.04.2026
+  # shared_preferences_android 2.4.23 still applies the `kotlin-android` plugin in its
+  # build.gradle.kts, which conflicts with AGP 9.0's built-in Kotlin support (AGP 9.0
+  # registers the `kotlin` extension automatically, causing a "Cannot add extension with
+  # name 'kotlin'" error when kotlin-android tries to register it again).
+  # The local patch removes `id("kotlin-android")` from the plugin's build.gradle.kts.
+  # This override can be removed once shared_preferences_android ships a fix upstream.
+  shared_preferences_android:
+    path: patches/shared_preferences_android
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
