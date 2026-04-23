@@ -40,16 +40,13 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
 
   /// Start Geo Triggering in iOS and Android (foreground mode)
   void _startGeoTriggeringNotification() {
-     if (Platform.isIOS) {
-      String iosAppRestartNotificationTitle =
-          'Restart Bluedot Service';
-      String iosAppRestartNotificationButtonText =
-          'Restart';
+    if (Platform.isIOS) {
+      String iosAppRestartNotificationTitle = 'Restart Bluedot Service';
+      String iosAppRestartNotificationButtonText = 'Restart';
 
       BluedotPointSdk.instance
-          .geoTriggeringBuilder().iosNotification(
-        iosAppRestartNotificationTitle,
-        iosAppRestartNotificationButtonText)
+          .geoTriggeringBuilder()
+          .iosNotification(iosAppRestartNotificationTitle, iosAppRestartNotificationButtonText)
           .start()
           .then((value) {
         // Handle successful start of geo-triggering
@@ -64,16 +61,14 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
             errorMessage, context);
       });
     } else {
-
-      String androidNotificationTitle =
-          'Bluedot Foreground Service - Geo-triggering';
-      String androidNotificationContent =
-          'This app is running a foreground service using location service';
+      String androidNotificationTitle = 'Bluedot Foreground Service - Geo-triggering';
+      String androidNotificationContent = 'This app is running a foreground service using location service';
       int androidNotificationId = 123;
 
       // Setting notification details for Android foreground service
       BluedotPointSdk.instance
-          .geoTriggeringBuilder().androidNotification(
+          .geoTriggeringBuilder()
+          .androidNotification(
               bluedotChannelId,
               bluedotChannelName,
               androidNotificationTitle,
@@ -84,15 +79,14 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
         // Handle successful start of geo-triggering
         _updateGeoTriggeringStatus();
       }).catchError((error) {
-          // Handle failed start of geo-triggering, handle error in here
-          String errorMessage = error.toString();
-          if (error is PlatformException) {
-             errorMessage = error.message!;
-          }
-          showAlert('Fail to start geo triggering with notification',
-              errorMessage, context);
+        // Handle failed start of geo-triggering, handle error in here
+        String errorMessage = error.toString();
+        if (error is PlatformException) {
+          errorMessage = error.message!;
+        }
+        showAlert('Fail to start geo triggering with notification', errorMessage, context);
       });
-     }
+    }
   }
 
   /// Stop Geo-Triggering
@@ -151,9 +145,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
             if (destination['customData'] != null) {
               var customData = destination['customData'];
               debugPrint('Destination Custom Data: $customData');
-              showAlert(
-                  'On Zone Info Update', 'Destination Custom Data: $customData',
-                  context);
+              showAlert('On Zone Info Update', 'Destination Custom Data: $customData', context);
             } else {
               debugPrint('No custom data for destination');
             }
@@ -170,9 +162,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
             if (destination['customData'] != null) {
               var customData = destination['customData'];
               debugPrint('Destination Custom Data: $customData');
-              showAlert(
-                  'On Zone Info Update', 'Destination Custom Data: $customData',
-                  context);
+              showAlert('On Zone Info Update', 'Destination Custom Data: $customData', context);
             } else {
               debugPrint('No custom data for destination');
             }
@@ -180,9 +170,8 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
             debugPrint('No destination for zone: ${zone['zoneName']}');
           }
         }
-
       }
-      }).catchError((error) {
+    }).catchError((error) {
       debugPrint('Error getting zones and fences: $error');
     });
   }
@@ -203,32 +192,26 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
       switch (call.method) {
         case GeoTriggeringEvents.didUpdateZoneInfo:
           debugPrint('On Zone Info Update: $args');
-          
+
           _getZonesAndFences();
           break;
         case GeoTriggeringEvents.didEnterZone:
           debugPrint('Did Enter Zone: $args');
 
-             //Get CustomEventMetaData and print in log
-             BluedotPointSdk.instance.getCustomEventMetaData().then((value) {
-                print(value);
-                if(value != null && value.isEmpty) {
+          //Get CustomEventMetaData and print in log
+          BluedotPointSdk.instance.getCustomEventMetaData().then((value) {
+            print(value);
+            if (value != null && value.isEmpty) {
+              debugPrint('Custom Event MetaData setting');
+              //Set CustomEventMetaData
+              final Map<String, String> someMap = {
+                "key1": "MinApp",
+                "Key2": "TestData",
+              };
 
-                  debugPrint('Custom Event MetaData setting');
-                 //Set CustomEventMetaData
-                              final Map<String, String> someMap = {
-                                             "key1": "MinApp",
-                                             "Key2": "TestData",
-                              };
-
-                  BluedotPointSdk.instance.setCustomEventMetaData(someMap);
-                }
-
-              });
-
-
-
-
+              BluedotPointSdk.instance.setCustomEventMetaData(someMap);
+            }
+          });
 
           showAlert(geoTriggeringAlertTitle, 'Did Enter Zone: $args', context);
           break;
@@ -274,17 +257,14 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
                     const Text('Allow Background Location Updates'),
                     Switch.adaptive(
                         value: _isBackgroundLocationUpdateEnabled,
-                        onChanged: (newValue) =>
-                            _allowsBackgroundLocationUpdates(newValue)),
-                    Text(
-                        'Is Background Location Enabled: $_isBackgroundLocationUpdateEnabled'),
+                        onChanged: (newValue) => _allowsBackgroundLocationUpdates(newValue)),
+                    Text('Is Background Location Enabled: $_isBackgroundLocationUpdateEnabled'),
                   ],
                   Text('Is Geo Triggering Running: $_isGeoTriggeringRunning'),
                   if (!_isGeoTriggeringRunning) ...[
-                      ElevatedButton(
-                          onPressed: _startGeoTriggeringNotification,
-                          child: const Text('Start with android notification')),
-
+                    ElevatedButton(
+                        onPressed: _startGeoTriggeringNotification,
+                        child: const Text('Start with android notification')),
                     ElevatedButton(
                         onPressed: _startGeoTriggering,
                         child: const Text('Start')),

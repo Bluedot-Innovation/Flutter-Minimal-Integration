@@ -8,13 +8,30 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:9.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.google.gms:google-services:4.4.2"
     }
 }
 
 allprojects {
+//    def gitlabMavenToken = project.findProperty('gitlabMavenToken') ?: ''
+//    def gitlabPipelineId = project.findProperty('gitlabPipelineId') ?: ''
+
     repositories {
         google()
         mavenCentral()
+
+//        if (gitlabPipelineId) {
+//            maven {
+//                url 'https://gitlab.com/api/v4/projects/14682665/packages/maven'
+//                credentials(HttpHeaderCredentials) {
+//                    name  'Private-Token'
+//                    value gitlabMavenToken
+//                }
+//                authentication {
+//                    header(HttpHeaderAuthentication)
+//                }
+//            }
+//        }
     }
 }
 

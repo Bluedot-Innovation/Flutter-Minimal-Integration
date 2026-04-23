@@ -51,6 +51,10 @@ class _HomePageState extends State<HomePage> {
     Navigator.pushNamed(context, '/tempo');
   }
 
+  void _openPushNotificationsPage() {
+    Navigator.pushNamed(context, '/push-notifications');
+  }
+
   void _resetSdk() {
     // Reset Bluedot Point SDK
     BluedotPointSdk.instance.reset().then((value) {
@@ -121,6 +125,9 @@ class _HomePageState extends State<HomePage> {
                           child: const Text('GEO-TRIGGERING')),
                       ElevatedButton(
                           onPressed: _openTempoPage, child: const Text('TEMPO')),
+                      ElevatedButton(
+                          onPressed: _openPushNotificationsPage,
+                          child: const Text('PUSH NOTIFICATIONS')),
                       ElevatedButton(
                           onPressed: _resetSdk, child: const Text('RESET SDK')),
                     ],
