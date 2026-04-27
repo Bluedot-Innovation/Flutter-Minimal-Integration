@@ -6,6 +6,11 @@
 -keep class io.flutter.** { *; }
 -keep class io.flutter.plugins.** { *; }
 
+# Suppress warnings for Flutter Play Store deferred components (not used in this app)
+-dontwarn com.google.android.play.core.splitcompat.SplitCompatApplication
+-dontwarn com.google.android.play.core.splitinstall.**
+-dontwarn com.google.android.play.core.tasks.**
+
 # AppCenter
 -keep class com.microsoft.appcenter.** { *; }
 
