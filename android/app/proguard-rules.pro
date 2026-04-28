@@ -17,3 +17,7 @@
 # Bluedot PointSDK
 -keep class au.com.bluedot.** { *; }
 
+# WorkManager - prevent R8 from removing generated database implementations
+-keep class androidx.work.** { *; }
+-keep class androidx.work.impl.** { *; }
+
