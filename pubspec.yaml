@@ -40,8 +40,7 @@ dependencies:
 #    bluedot_point_sdk:
 #    path: ../PointSDK-Flutter-Plugin  # Relative path to the plugin folder
 
-  # Optional push notifications module — requires FIREBASE_ENABLED=true at build time.
-  # The module is always compiled in; Dart-side usage is guarded by FIREBASE_ENABLED.
+  # Optional push notifications module — requires PUSH_ENABLED=true at build time.
   bluedot_point_sdk_push:
     git:
       url: https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git

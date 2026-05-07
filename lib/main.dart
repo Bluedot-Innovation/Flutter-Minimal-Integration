@@ -8,9 +8,9 @@ import 'initial_page.dart';
 import 'push_notifications_page.dart';
 import 'tempo_page.dart';
 
-/// Whether Firebase / push-notifications is enabled in this build.
-/// Set via --dart-define=FIREBASE_ENABLED=true|false (driven by gradle.properties).
-const bool _firebaseEnabled = bool.fromEnvironment('FIREBASE_ENABLED', defaultValue: true);
+/// Whether push-notifications is enabled in this build.
+/// Set via --dart-define=PUSH_ENABLED=true|false (driven by gradle.properties).
+const bool _pushEnabled = bool.fromEnvironment('PUSH_ENABLED', defaultValue: true);
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
     // Register push notification listener when Firebase is enabled.
     // In default mode the plugin's DefaultMessagingService automatically
     // handles FCM token updates and message delivery — no extra wiring needed.
-    if (_firebaseEnabled) {
+    if (_pushEnabled) {
       _setupPushListener();
     }
   }

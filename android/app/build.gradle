@@ -4,10 +4,10 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
-// Resolve FIREBASE_ENABLED: env var takes precedence over gradle.properties
-def firebaseEnabled = (System.getenv("FIREBASE_ENABLED") ?: project.findProperty("FIREBASE_ENABLED") ?: "false") == "true"
+// Resolve PUSH_ENABLED: env var takes precedence over gradle.properties
+def pushEnabled = (System.getenv("PUSH_ENABLED") ?: project.findProperty("PUSH_ENABLED") ?: "false") == "true"
 
-if (firebaseEnabled) {
+if (pushEnabled) {
     apply plugin: 'com.google.gms.google-services'
 }
 
@@ -68,8 +68,8 @@ android {
         versionName flutterVersionName
 
         // Expose flag to Android (BuildConfig) and Flutter (dart-define)
-        buildConfigField "boolean", "FIREBASE_ENABLED", "${firebaseEnabled}"
-        addManifestPlaceholders(["firebaseEnabled": firebaseEnabled])
+        buildConfigField "boolean", "PUSH_ENABLED", "${pushEnabled}"
+        addManifestPlaceholders(["pushEnabled": pushEnabled])
     }
 
     buildTypes {
