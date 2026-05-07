@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
+import 'package:flutter_minimal_integration/helpers/app_config.dart';
 import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +15,7 @@ class _HomePageState extends State<HomePage> {
   String _installRef = '';
   String _sdkVersion = '';
   String _projectId = '';
+  bool _pushEnabled = true;
 
   @override
   void initState() {
@@ -41,6 +43,11 @@ class _HomePageState extends State<HomePage> {
       print(value);
     });
     _retrieveProjectId();
+    AppConfig.isPushEnabled().then((value) {
+      setState(() {
+        _pushEnabled = value;
+      });
+    });
   }
 
   void _openGeoTriggeringPage() {
@@ -125,9 +132,10 @@ class _HomePageState extends State<HomePage> {
                           child: const Text('GEO-TRIGGERING')),
                       ElevatedButton(
                           onPressed: _openTempoPage, child: const Text('TEMPO')),
-                      ElevatedButton(
-                          onPressed: _openPushNotificationsPage,
-                          child: const Text('PUSH NOTIFICATIONS')),
+                      if (_pushEnabled)
+                        ElevatedButton(
+                            onPressed: _openPushNotificationsPage,
+                            child: const Text('PUSH NOTIFICATIONS')),
                       ElevatedButton(
                           onPressed: _resetSdk, child: const Text('RESET SDK')),
                     ],
