@@ -43,7 +43,7 @@ dependencies:
   # Optional push notifications module — requires FIREBASE_ENABLED=true at build time.
   # The module is always compiled in; Dart-side usage is guarded by FIREBASE_ENABLED.
   bluedot_point_sdk_push:
-    path: ../PointSDK-Flutter-Plugin/pushnotifications
+    path: ../PointSDK-Flutter-Push
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
