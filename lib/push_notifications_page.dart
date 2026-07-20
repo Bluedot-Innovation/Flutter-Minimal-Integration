@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'helpers/push_notification_manager.dart';
 
@@ -10,17 +12,24 @@ class PushNotificationsPage extends StatefulWidget {
 
 class _PushNotificationsPageState extends State<PushNotificationsPage> {
   late final List<PushNotificationEvent> _events;
+  late final StreamSubscription<PushNotificationEvent> _subscription;
 
   @override
   void initState() {
     super.initState();
     // Snapshot the current list plus subscribe for live updates.
     _events = List.from(PushNotificationManager.instance.events);
-    PushNotificationManager.instance.stream.listen((event) {
+    _subscription = PushNotificationManager.instance.stream.listen((event) {
       if (mounted) {
         setState(() => _events.add(event));
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   @override

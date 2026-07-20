@@ -21,14 +21,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     BluedotPointSdk.instance.getInstallRef().then((value) {
-      setState(() {
-        _installRef = value;
-      });
+      if (mounted) setState(() => _installRef = value);
     });
     BluedotPointSdk.instance.getSDKVersion().then((value) {
-      setState(() {
-        _sdkVersion = value;
-      });
+      if (mounted) setState(() => _sdkVersion = value);
     });
 
    //Set CustomEventMetaData
@@ -44,9 +40,7 @@ class _HomePageState extends State<HomePage> {
     });
     _retrieveProjectId();
     AppConfig.isPushEnabled().then((value) {
-      setState(() {
-        _pushEnabled = value;
-      });
+      if (mounted) setState(() => _pushEnabled = value);
     });
   }
 
@@ -73,9 +67,7 @@ class _HomePageState extends State<HomePage> {
   void _retrieveProjectId() async {
     final sharedPrefs = await SharedPreferences.getInstance();
     var projectId = sharedPrefs.getString('projectId') ?? '';
-    setState(() {
-      _projectId = projectId;
-    });
+    if (mounted) setState(() => _projectId = projectId);
   }
 
   @override

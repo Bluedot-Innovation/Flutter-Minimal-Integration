@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:bluedot_point_sdk_push/bluedot_point_sdk_push.dart';
 import 'geo_triggering_page.dart';
+import 'helpers/app_config.dart';
 import 'helpers/push_notification_manager.dart';
 import 'home_page.dart';
 import 'initial_page.dart';
 import 'push_notifications_page.dart';
 import 'tempo_page.dart';
-
-/// Whether push-notifications is enabled in this build.
-/// Set via --dart-define=PUSH_ENABLED=true|false (driven by gradle.properties).
-const bool _pushEnabled = bool.fromEnvironment('PUSH_ENABLED', defaultValue: true);
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,13 +26,15 @@ class _MyAppState extends State<MyApp> {
 
   void initState() {
     super.initState();
-    // Request permissions for location and notification
-    _requestPermission();
+    _requestPermissions();
+  }
 
-    // Register push notification listener when Firebase is enabled.
-    // In default mode the plugin's DefaultMessagingService automatically
-    // handles FCM token updates and message delivery — no extra wiring needed.
-    if (_pushEnabled) {
+  Future<void> _requestPermissions() async {
+    await Permission.locationWhenInUse.request();
+    // Notification permission and push listener are only needed when push is
+    // enabled — avoids prompts and Firebase wiring on builds without FCM.
+    if (await AppConfig.isPushEnabled()) {
+      await Permission.notification.request();
       _setupPushListener();
     }
   }
@@ -53,11 +52,6 @@ class _MyAppState extends State<MyApp> {
         );
       },
     );
-  }
-
-  void _requestPermission() async {
-    await Permission.locationWhenInUse.request();
-    await Permission.notification.request();
   }
 
   @override
