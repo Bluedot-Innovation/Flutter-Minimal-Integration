@@ -16,7 +16,7 @@ import Flutter
       )
       configChannel.setMethodCallHandler { (call, result) in
           if call.method == "isPushEnabled" {
-              let pushEnabled = Bundle.main.object(forInfoDictionaryKey: "PUSH_ENABLED") as? Bool ?? true
+              let pushEnabled = Bundle.main.object(forInfoDictionaryKey: "PUSH_ENABLED") as? Bool ?? false
               result(pushEnabled)
           } else {
               result(FlutterMethodNotImplemented)

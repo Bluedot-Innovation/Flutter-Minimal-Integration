@@ -7,8 +7,8 @@ class AppConfig {
     try {
       final bool result = await _channel.invokeMethod('isPushEnabled');
       return result;
-    } on PlatformException {
-      return true; // default to enabled on error
+    } on Exception {
+      return false; // default to disabled on error, consistent with Info.plist
     }
   }
 }

@@ -51,9 +51,5 @@ class PushNotificationManager {
     events.add(event);
     _controller.add(event);
   }
-
-  void dispose() {
-    _controller.close();
-  }
 }
 

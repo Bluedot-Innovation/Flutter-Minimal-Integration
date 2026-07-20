@@ -15,7 +15,7 @@ class _HomePageState extends State<HomePage> {
   String _installRef = '';
   String _sdkVersion = '';
   String _projectId = '';
-  bool _pushEnabled = true;
+  bool _pushEnabled = false;
 
   @override
   void initState() {
