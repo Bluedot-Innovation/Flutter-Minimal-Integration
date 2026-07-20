@@ -98,6 +98,14 @@ workflows:
                 echo "Found package version: ${FLUTTER_PLUGIN_VERSION}"
                 
                 envman add --key FLUTTER_PLUGIN_VERSION --value "${FLUTTER_PLUGIN_VERSION}"
+      - script@1:
+          title: Inject google-services.json
+          inputs:
+            - content: |-
+                #!/usr/bin/env bash
+                set -euo pipefail
+                echo "$GOOGLE_SERVICES_JSON" > "$BITRISE_SOURCE_DIR/android/app/google-services.json"
+                echo "google-services.json written successfully."
       - install-missing-android-tools@3:
           is_always_run: true
       - change-android-versioncode-and-versionname@1:
@@ -208,6 +216,14 @@ workflows:
                 echo "Found version: ${FLUTTER_VERSION}"
                 
                 envman add --key FLUTTER_VERSION --value "${FLUTTER_VERSION}"
+      - script@1:
+          title: Inject google-services.json
+          inputs:
+            - content: |-
+                #!/usr/bin/env bash
+                set -euo pipefail
+                echo "$GOOGLE_SERVICES_JSON" > "$BITRISE_SOURCE_DIR/android/app/google-services.json"
+                echo "google-services.json written successfully."
       - install-missing-android-tools@3:
           is_always_run: true
       - change-android-versioncode-and-versionname@1:
