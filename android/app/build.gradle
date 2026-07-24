@@ -67,7 +67,6 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
 
-        // Expose flag to Android (BuildConfig) and Flutter (dart-define)
         buildConfigField "boolean", "PUSH_ENABLED", "${pushEnabled}"
         addManifestPlaceholders(["pushEnabled": pushEnabled])
     }
