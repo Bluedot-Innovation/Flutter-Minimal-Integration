@@ -53,7 +53,7 @@ PUSH_ENABLED=true flutter build apk
 
 #### 3. Change the application package name
 
-Current package name for teh Android app is `io.bluedot.flutter_minimal_app`. To make push notifications work with your own Firebase project, 
+Current package name for the Android app is `io.bluedot.flutter_minimal_app`. To make push notifications work with your own Firebase project, 
 you must change the package name in several places to match the one you registered in Firebase.
 
 | File | Field | Change to |
