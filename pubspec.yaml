@@ -28,7 +28,6 @@ dependencies:
   permission_handler: ^12.0.1
   shared_preferences: ^2.5.4
   bluedot_point_sdk: #2.1.0
-    # path: /Users/adamkrupczynski/StudioProjects/PointSDK-Flutter-Plugin
     # When depending on this package from a real application you should use:
     #   bluedot_point_sdk: ^x.y.z (^1.0.1)
     # See https://dart.dev/tools/pub/dependencies#version-constraints

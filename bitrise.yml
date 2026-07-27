@@ -104,7 +104,11 @@ workflows:
             - content: |-
                 #!/usr/bin/env bash
                 set -euo pipefail
-                echo "$GOOGLE_SERVICES_JSON" > "$BITRISE_SOURCE_DIR/android/app/google-services.json"
+                if [[ -z "${GOOGLE_SERVICES_JSON:-}" ]]; then
+                  echo "ERROR: GOOGLE_SERVICES_JSON is unset or empty." >&2
+                  exit 1
+                fi
+                printf '%s' "$GOOGLE_SERVICES_JSON" > "$BITRISE_SOURCE_DIR/android/app/google-services.json"
                 echo "google-services.json written successfully."
       - install-missing-android-tools@3:
           is_always_run: true
@@ -222,7 +226,11 @@ workflows:
             - content: |-
                 #!/usr/bin/env bash
                 set -euo pipefail
-                echo "$GOOGLE_SERVICES_JSON" > "$BITRISE_SOURCE_DIR/android/app/google-services.json"
+                if [[ -z "${GOOGLE_SERVICES_JSON:-}" ]]; then
+                  echo "ERROR: GOOGLE_SERVICES_JSON is unset or empty." >&2
+                  exit 1
+                fi
+                printf '%s' "$GOOGLE_SERVICES_JSON" > "$BITRISE_SOURCE_DIR/android/app/google-services.json"
                 echo "google-services.json written successfully."
       - install-missing-android-tools@3:
           is_always_run: true
