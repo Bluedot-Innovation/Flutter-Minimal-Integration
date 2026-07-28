@@ -8,6 +8,108 @@ import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
 import 'helpers/constants.dart';
 import 'helpers/show_alert.dart';
 
+// ---------------------------------------------------------------------------
+// Simple model for a logged geo-triggering event
+// ---------------------------------------------------------------------------
+class GeoTriggerEvent {
+  final String type;
+  final String details;
+  final DateTime timestamp;
+
+  GeoTriggerEvent({
+    required this.type,
+    required this.details,
+    required DateTime? timestamp,
+  }) : timestamp = timestamp ?? DateTime.now();
+}
+
+// ---------------------------------------------------------------------------
+// Singleton store so events survive page re-creation
+// ---------------------------------------------------------------------------
+class GeoTriggerEventStore {
+  GeoTriggerEventStore._();
+  static final instance = GeoTriggerEventStore._();
+
+  final List<GeoTriggerEvent> events = [];
+
+  final _listeners = <VoidCallback>[];
+  void addListener(VoidCallback l) => _listeners.add(l);
+  void removeListener(VoidCallback l) => _listeners.remove(l);
+
+  void add(GeoTriggerEvent e) {
+    events.add(e);
+    for (final l in List.of(_listeners)) {
+      l();
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Singleton channel handler – registered once so it works across navigations
+// ---------------------------------------------------------------------------
+class _GeoTriggeringChannelHandler {
+  _GeoTriggeringChannelHandler._() {
+    _channel.setMethodCallHandler(_handleCall);
+  }
+  static final instance = _GeoTriggeringChannelHandler._();
+
+  final _channel = const MethodChannel(BluedotPointSdk.geoTriggering);
+
+  Future<void> _handleCall(MethodCall call) async {
+    final args = call.arguments;
+    final store = GeoTriggerEventStore.instance;
+
+    switch (call.method) {
+      case GeoTriggeringEvents.didUpdateZoneInfo:
+        debugPrint('On Zone Info Update: $args');
+        store.add(GeoTriggerEvent(
+          type: 'Zone Info Update',
+          details: args?.toString() ?? '',
+          timestamp: DateTime.now(),
+        ));
+        break;
+      case GeoTriggeringEvents.didEnterZone:
+        debugPrint('Did Enter Zone: $args');
+        store.add(GeoTriggerEvent(
+          type: 'Enter Zone',
+          details: args?.toString() ?? '',
+          timestamp: DateTime.now(),
+        ));
+        // CustomEventMetaData example
+        BluedotPointSdk.instance.getCustomEventMetaData().then((value) {
+          if (value != null && value.isEmpty) {
+            BluedotPointSdk.instance.setCustomEventMetaData({
+              'key1': 'MinApp',
+              'Key2': 'TestData',
+            });
+          }
+        });
+        break;
+      case GeoTriggeringEvents.didExitZone:
+        debugPrint('Did Exit Zone: $args');
+        store.add(GeoTriggerEvent(
+          type: 'Exit Zone',
+          details: args?.toString() ?? '',
+          timestamp: DateTime.now(),
+        ));
+        break;
+      case GeoTriggeringEvents.didDwellInZone:
+        debugPrint('Did Dwell Zone: $args');
+        store.add(GeoTriggerEvent(
+          type: 'Dwell Zone',
+          details: args?.toString() ?? '',
+          timestamp: DateTime.now(),
+        ));
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Widget
+// ---------------------------------------------------------------------------
 class GeoTriggeringPage extends StatefulWidget {
   const GeoTriggeringPage({Key? key}) : super(key: key);
 
@@ -18,105 +120,77 @@ class GeoTriggeringPage extends StatefulWidget {
 class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   bool _isGeoTriggeringRunning = false;
   bool _isBackgroundLocationUpdateEnabled = true;
-  final geoTriggeringEventChannel = const MethodChannel(BluedotPointSdk
-      .geoTriggering); // Method channel to listen to geo triggering events
 
-  /// Start Geo triggering in iOS and Android (background mode)
+  @override
+  void initState() {
+    super.initState();
+    // Ensure the singleton channel handler is initialised.
+    _GeoTriggeringChannelHandler.instance;
+
+    GeoTriggerEventStore.instance.addListener(_onNewEvent);
+    _updateGeoTriggeringStatus();
+    _updateBackgroundLocationStatus();
+  }
+
+  @override
+  void dispose() {
+    GeoTriggerEventStore.instance.removeListener(_onNewEvent);
+    super.dispose();
+  }
+
+  void _onNewEvent() {
+    if (mounted) setState(() {});
+  }
+
+  // ---- SDK helpers ---------------------------------------------------------
+
   void _startGeoTriggering() {
-    BluedotPointSdk.instance.geoTriggeringBuilder().start().then((value) {
-      // Successfully started geo triggering, delay updating geo triggering status to wait for sdk to update geo-triggering status
-      Future.delayed(const Duration(milliseconds: 500), () {
-        _updateGeoTriggeringStatus();
-      });
+    BluedotPointSdk.instance.geoTriggeringBuilder().start().then((_) {
+      Future.delayed(const Duration(milliseconds: 500), _updateGeoTriggeringStatus);
     }).catchError((error) {
-      // Failed to start geo triggering, handle error in here
-      String errorMessage = error.toString();
-      if (error is PlatformException) {
-        errorMessage = error.message!;
-      }
-      showAlert('Fail to start geo triggering', errorMessage, context);
+      _showError('Fail to start geo triggering', error);
     });
   }
 
-  /// Start Geo Triggering in iOS and Android (foreground mode)
   void _startGeoTriggeringNotification() {
-     if (Platform.isIOS) {
-      String iosAppRestartNotificationTitle =
-          'Restart Bluedot Service';
-      String iosAppRestartNotificationButtonText =
-          'Restart';
-
+    if (Platform.isIOS) {
       BluedotPointSdk.instance
-          .geoTriggeringBuilder().iosNotification(
-        iosAppRestartNotificationTitle,
-        iosAppRestartNotificationButtonText)
+          .geoTriggeringBuilder()
+          .iosNotification('Restart Bluedot Service', 'Restart')
           .start()
-          .then((value) {
-        // Handle successful start of geo-triggering
-        _updateGeoTriggeringStatus();
-      }).catchError((error) {
-        // Handle failed start of geo-triggering, handle error in here
-        String errorMessage = error.toString();
-        if (error is PlatformException) {
-          errorMessage = error.message!;
-        }
-        showAlert('Fail to start geo triggering with notification',
-            errorMessage, context);
+          .then((_) => _updateGeoTriggeringStatus())
+          .catchError((error) {
+        _showError('Fail to start geo triggering with notification', error);
       });
     } else {
-
-      String androidNotificationTitle =
-          'Bluedot Foreground Service - Geo-triggering';
-      String androidNotificationContent =
-          'This app is running a foreground service using location service';
-      int androidNotificationId = 123;
-
-      // Setting notification details for Android foreground service
       BluedotPointSdk.instance
-          .geoTriggeringBuilder().androidNotification(
-              bluedotChannelId,
-              bluedotChannelName,
-              androidNotificationTitle,
-              androidNotificationContent,
-              androidNotificationId)
+          .geoTriggeringBuilder()
+          .androidNotification(
+            bluedotChannelId,
+            bluedotChannelName,
+            'Bluedot Foreground Service - Geo-triggering',
+            'This app is running a foreground service using location service',
+            123,
+          )
           .start()
-          .then((value) {
-        // Handle successful start of geo-triggering
-        _updateGeoTriggeringStatus();
-      }).catchError((error) {
-          // Handle failed start of geo-triggering, handle error in here
-          String errorMessage = error.toString();
-          if (error is PlatformException) {
-             errorMessage = error.message!;
-          }
-          showAlert('Fail to start geo triggering with notification',
-              errorMessage, context);
+          .then((_) => _updateGeoTriggeringStatus())
+          .catchError((error) {
+        _showError('Fail to start geo triggering with notification', error);
       });
-     }
+    }
   }
 
-  /// Stop Geo-Triggering
   void _stopGeoTriggering() {
-    BluedotPointSdk.instance.stopGeoTriggering().then((value) {
-      // Successfully stop geo triggering
+    BluedotPointSdk.instance.stopGeoTriggering().then((_) {
       _updateGeoTriggeringStatus();
     }).catchError((error) {
-      // Failed to stop geo triggering, handle error in here
-      String errorMessage = error.toString();
-      if (error is PlatformException) {
-        errorMessage = error.message!;
-      }
-      showAlert('Fail to stop geo triggering', errorMessage, context);
+      _showError('Fail to stop geo triggering', error);
     });
   }
 
-  /// Retrieve isGeoTriggeringRunning
   void _updateGeoTriggeringStatus() {
     BluedotPointSdk.instance.isGeoTriggeringRunning().then((value) {
-      setState(() {
-        debugPrint('Is Geo Running $value');
-        _isGeoTriggeringRunning = value;
-      });
+      if (mounted) setState(() => _isGeoTriggeringRunning = value);
     });
   }
 
@@ -129,172 +203,150 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   }
 
   void _updateBackgroundLocationStatus() async {
-    var backgroundLocationStatus =
-        await getBoolForKey(isBackgroundLocationUpdateString);
-    setState(() {
-      _isBackgroundLocationUpdateEnabled = backgroundLocationStatus;
-    });
+    final v = await getBoolForKey(isBackgroundLocationUpdateString);
+    if (mounted) setState(() => _isBackgroundLocationUpdateEnabled = v);
   }
 
-  void _getZonesAndFences() {
-    BluedotPointSdk.instance.getZonesAndFences().then((zones) {
-      debugPrint('Zones and Fences received');
-      debugPrint('Zones and Fences received: ${jsonEncode(zones)}');
-      for (var zone in zones) {
-        if (Platform.isIOS) {
-          debugPrint('Zone: ${zone['name']} (ID: ${zone['ID']})');
-          // Access destination->customData
-          if (zone['destination'] != null) {
-            var destination = zone['destination'];
-            debugPrint('Destination: ${destination['name']}');
-
-            if (destination['customData'] != null) {
-              var customData = destination['customData'];
-              debugPrint('Destination Custom Data: $customData');
-              showAlert(
-                  'On Zone Info Update', 'Destination Custom Data: $customData',
-                  context);
-            } else {
-              debugPrint('No custom data for destination');
-            }
-          } else {
-            debugPrint('No destination for zone: ${zone['name']}');
-          }
-        } else if (Platform.isAndroid) {
-          debugPrint('Zone: ${zone['zoneName']} (ID: ${zone['zoneId']})');
-          // Access destination->customData
-          if (zone['destination'] != null) {
-            var destination = zone['destination'];
-            debugPrint('Destination: ${destination['name']}');
-
-            if (destination['customData'] != null) {
-              var customData = destination['customData'];
-              debugPrint('Destination Custom Data: $customData');
-              showAlert(
-                  'On Zone Info Update', 'Destination Custom Data: $customData',
-                  context);
-            } else {
-              debugPrint('No custom data for destination');
-            }
-          } else {
-            debugPrint('No destination for zone: ${zone['zoneName']}');
-          }
-        }
-
-      }
-      }).catchError((error) {
-      debugPrint('Error getting zones and fences: $error');
-    });
+  void _showError(String title, dynamic error) {
+    String msg = error.toString();
+    if (error is PlatformException) msg = error.message ?? msg;
+    showAlert(title, msg, context);
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    /// set a custom notification icon for GeoTriggering/Tempo service Foreground Notification in Android
-    /// By default the Bluedot PointSDK uses `ic_stat_name`, only need to call this if you want to set a different icon.
-    /// IMPORTANT: Make sure setNotificationIcon()  is called prior to starting GeoTriggering
-    // BluedotPointSdk.instance.setNotificationIcon('some_notification_icon');
-
-    // Handle geo triggering events
-    geoTriggeringEventChannel.setMethodCallHandler((MethodCall call) async {
-      var args = call.arguments;
-      var geoTriggeringAlertTitle = 'Geo-Triggering Events';
-      switch (call.method) {
-        case GeoTriggeringEvents.didUpdateZoneInfo:
-          debugPrint('On Zone Info Update: $args');
-          
-          _getZonesAndFences();
-          break;
-        case GeoTriggeringEvents.didEnterZone:
-          debugPrint('Did Enter Zone: $args');
-
-             //Get CustomEventMetaData and print in log
-             BluedotPointSdk.instance.getCustomEventMetaData().then((value) {
-                print(value);
-                if(value != null && value.isEmpty) {
-
-                  debugPrint('Custom Event MetaData setting');
-                 //Set CustomEventMetaData
-                              final Map<String, String> someMap = {
-                                             "key1": "MinApp",
-                                             "Key2": "TestData",
-                              };
-
-                  BluedotPointSdk.instance.setCustomEventMetaData(someMap);
-                }
-
-              });
-
-
-
-
-
-          showAlert(geoTriggeringAlertTitle, 'Did Enter Zone: $args', context);
-          break;
-        case GeoTriggeringEvents.didExitZone:
-          debugPrint('Did Exit Zone: $args');
-          showAlert(geoTriggeringAlertTitle, 'Did Exit Zone: $args', context);
-          break;
-
-        case GeoTriggeringEvents.didDwellInZone:
-          debugPrint('Did dwell Zone: $args');
-          showAlert(geoTriggeringAlertTitle, 'Did dwell Zone: $args', context);
-          break;
-        default:
-          break;
-      }
-    });
-    _updateGeoTriggeringStatus();
-    _updateBackgroundLocationStatus();
-  }
+  // ---- Build ---------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('GEO-TRIGGERING'),
-        ),
-        body: Center(
-          child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 25, vertical: 200),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    'GEO TRIGGERING',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  if (Platform.isIOS) ...[
-                    const Text('Allow Background Location Updates'),
-                    Switch.adaptive(
-                        value: _isBackgroundLocationUpdateEnabled,
-                        onChanged: (newValue) =>
-                            _allowsBackgroundLocationUpdates(newValue)),
-                    Text(
-                        'Is Background Location Enabled: $_isBackgroundLocationUpdateEnabled'),
-                  ],
-                  Text('Is Geo Triggering Running: $_isGeoTriggeringRunning'),
-                  if (!_isGeoTriggeringRunning) ...[
-                      ElevatedButton(
-                          onPressed: _startGeoTriggeringNotification,
-                          child: const Text('Start with android notification')),
+    final events = GeoTriggerEventStore.instance.events;
 
-                    ElevatedButton(
-                        onPressed: _startGeoTriggering,
-                        child: const Text('Start')),
-                  ] else ...[
-                    ElevatedButton(
-                        onPressed: _stopGeoTriggering,
-                        child: const Text('Stop')),
-                  ],
+    return Scaffold(
+      appBar: AppBar(title: const Text('GEO-TRIGGERING')),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // ---- Controls (pinned to top) ------------------------------------
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (Platform.isIOS) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Allow Background Location Updates'),
+                      Switch.adaptive(
+                        value: _isBackgroundLocationUpdateEnabled,
+                        onChanged: _allowsBackgroundLocationUpdates,
+                      ),
+                    ],
+                  ),
+                  Text('Background Location Enabled: $_isBackgroundLocationUpdateEnabled'),
+                  const SizedBox(height: 8),
                 ],
-              )),
-        ));
+                Text(
+                  'Geo Triggering Running: $_isGeoTriggeringRunning',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                if (!_isGeoTriggeringRunning) ...[
+                  ElevatedButton(
+                    onPressed: _startGeoTriggeringNotification,
+                    child: const Text('Start with notification'),
+                  ),
+                  const SizedBox(height: 4),
+                  ElevatedButton(
+                    onPressed: _startGeoTriggering,
+                    child: const Text('Start'),
+                  ),
+                ] else ...[
+                  ElevatedButton(
+                    onPressed: _stopGeoTriggering,
+                    child: const Text('Stop'),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const Divider(),
+          // ---- Event log ---------------------------------------------------
+          Expanded(
+            child: events.isEmpty
+                ? const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(24),
+                      child: Text(
+                        'No geo-triggering events yet.\n\n'
+                        'Events will appear here as you enter, dwell in, or exit zones.',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                : ListView.separated(
+                    padding: const EdgeInsets.all(12),
+                    itemCount: events.length,
+                    separatorBuilder: (_, __) => const Divider(),
+                    itemBuilder: (context, index) {
+                      // Newest first
+                      final event = events[events.length - 1 - index];
+                      return ListTile(
+                        leading: _iconForType(event.type),
+                        title: Text(
+                          event.type,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (event.details.isNotEmpty)
+                              Text(event.details),
+                            const SizedBox(height: 4),
+                            Text(
+                              _formatTimestamp(event.timestamp),
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                        isThreeLine: event.details.isNotEmpty,
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _iconForType(String type) {
+    IconData icon;
+    Color color;
+    switch (type) {
+      case 'Enter Zone':
+        icon = Icons.login;
+        color = Colors.green;
+        break;
+      case 'Exit Zone':
+        icon = Icons.logout;
+        color = Colors.red;
+        break;
+      case 'Dwell Zone':
+        icon = Icons.access_time;
+        color = Colors.orange;
+        break;
+      default:
+        icon = Icons.info_outline;
+        color = Colors.blue;
+    }
+    return Icon(icon, color: color);
+  }
+
+  String _formatTimestamp(DateTime dt) {
+    return '${dt.hour.toString().padLeft(2, '0')}:'
+        '${dt.minute.toString().padLeft(2, '0')}:'
+        '${dt.second.toString().padLeft(2, '0')} '
+        '${dt.day}/${dt.month}/${dt.year}';
   }
 }

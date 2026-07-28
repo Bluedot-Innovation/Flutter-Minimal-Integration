@@ -4,6 +4,13 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+// Resolve PUSH_ENABLED: env var takes precedence over gradle.properties
+def pushEnabled = (System.getenv("PUSH_ENABLED") ?: project.findProperty("PUSH_ENABLED") ?: "false") == "true"
+
+if (pushEnabled) {
+    apply plugin: 'com.google.gms.google-services'
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -42,6 +49,10 @@ android {
         jvmTarget = '21'
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -55,6 +66,9 @@ android {
         targetSdk 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+
+        buildConfigField "boolean", "PUSH_ENABLED", "${pushEnabled}"
+        addManifestPlaceholders(["pushEnabled": pushEnabled])
     }
 
     buildTypes {

@@ -98,6 +98,18 @@ workflows:
                 echo "Found package version: ${FLUTTER_PLUGIN_VERSION}"
                 
                 envman add --key FLUTTER_PLUGIN_VERSION --value "${FLUTTER_PLUGIN_VERSION}"
+      - script@1:
+          title: Inject google-services.json
+          inputs:
+            - content: |-
+                #!/usr/bin/env bash
+                set -euo pipefail
+                if [[ -z "${GOOGLE_SERVICES_JSON:-}" ]]; then
+                  echo "ERROR: GOOGLE_SERVICES_JSON is unset or empty." >&2
+                  exit 1
+                fi
+                printf '%s' "$GOOGLE_SERVICES_JSON" > "$BITRISE_SOURCE_DIR/android/app/google-services.json"
+                echo "google-services.json written successfully."
       - install-missing-android-tools@3:
           is_always_run: true
       - change-android-versioncode-and-versionname@1:
@@ -115,6 +127,7 @@ workflows:
           inputs:
             - cache_level: none
             - android_output_pattern: "*build/app/outputs/apk/*/*.apk"
+            - android_additional_params: "-PPUSH_ENABLED=true"
       - sign-apk@1:
           inputs:
             - use_apk_signer: 'true'
@@ -207,6 +220,18 @@ workflows:
                 echo "Found version: ${FLUTTER_VERSION}"
                 
                 envman add --key FLUTTER_VERSION --value "${FLUTTER_VERSION}"
+      - script@1:
+          title: Inject google-services.json
+          inputs:
+            - content: |-
+                #!/usr/bin/env bash
+                set -euo pipefail
+                if [[ -z "${GOOGLE_SERVICES_JSON:-}" ]]; then
+                  echo "ERROR: GOOGLE_SERVICES_JSON is unset or empty." >&2
+                  exit 1
+                fi
+                printf '%s' "$GOOGLE_SERVICES_JSON" > "$BITRISE_SOURCE_DIR/android/app/google-services.json"
+                echo "google-services.json written successfully."
       - install-missing-android-tools@3:
           is_always_run: true
       - change-android-versioncode-and-versionname@1:
@@ -224,6 +249,7 @@ workflows:
           inputs:
             - cache_level: none
             - android_output_pattern: "*build/app/outputs/apk/*/*.apk"
+            - android_additional_params: "-PPUSH_ENABLED=true"
       - sign-apk@1:
           inputs:
             - use_apk_signer: 'true'

@@ -28,7 +28,6 @@ dependencies:
   permission_handler: ^12.0.1
   shared_preferences: ^2.5.4
   bluedot_point_sdk: #2.1.0
-#    path: /Users/adamkrupczynski/StudioProjects/PointSDK-Flutter-Plugin
     # When depending on this package from a real application you should use:
     #   bluedot_point_sdk: ^x.y.z (^1.0.1)
     # See https://dart.dev/tools/pub/dependencies#version-constraints
@@ -36,9 +35,16 @@ dependencies:
     # the parent directory to use the current plugin's version.
     git:
       url: https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git
-      ref: dev/2.1.2
+      ref: ak/BD-7586
 #    bluedot_point_sdk:
 #    path: ../PointSDK-Flutter-Plugin  # Relative path to the plugin folder
+
+  # Optional push notifications module — requires PUSH_ENABLED=true at build time.
+  bluedot_point_sdk_push:
+    git:
+      url: https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git
+      ref: ak/BD-7586
+      path: PointSDK-Flutter-Push
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -46,12 +52,16 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^2.0.0
+
+# Override needed because bluedot_point_sdk_push declares a hosted dependency on
+# bluedot_point_sdk, but this app uses the git version.
+dependency_overrides:
+  bluedot_point_sdk:
+    git:
+      url: https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git
+      ref: ak/BD-7586
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
