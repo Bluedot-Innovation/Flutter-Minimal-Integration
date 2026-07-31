@@ -4,7 +4,7 @@
 > | Platform | Status |
 > |----------|--------|
 > | Android  | ✅ Implemented |
-> | iOS      | 🚧 Not yet implemented |
+> | iOS      | ✅ Implemented |
 
 ---
 
@@ -71,3 +71,53 @@ flutter run          # or: PUSH_ENABLED=true flutter run
 ```
 
 The **Push Notifications** button will appear on the home screen and the app will request notification permission on launch.
+
+---
+
+## Enabling Push Notifications - iOS (opt-in)
+
+Push notifications are disabled by default. No PointSDK-specific AppDelegate code is required: the Flutter plugin registers with APNs and forwards notification lifecycle events to PointSDK.
+
+### Prerequisites
+
+- An Apple Developer App ID and provisioning profile with the Push Notifications capability.
+- A bundle identifier matching that App ID (the sample default is `io.bluedot.flutterMinIntegrationApp`).
+- An APNs authentication key or certificate configured for the app in Bluedot Canvas.
+- A Bluedot Canvas project with a push campaign and location-based trigger configured.
+- A physical iOS device. APNs registration and location-triggered delivery should not be validated on the simulator.
+
+### iOS – step-by-step
+
+#### 1. Configure signing
+
+Open `ios/Runner.xcworkspace` in Xcode, select the **Runner** target, then choose your team and an APNs-enabled bundle identifier under **Signing & Capabilities**. The sample already includes the Push Notifications capability and the `remote-notification` background mode.
+
+#### 2. Set `PUSH_ENABLED` to true
+
+Open `ios/Runner/Info.plist` and change:
+
+```xml
+<key>PUSH_ENABLED</key>
+<false/>
+```
+
+to:
+
+```xml
+<key>PUSH_ENABLED</key>
+<true/>
+```
+
+#### 3. Configure Canvas
+
+In Bluedot Canvas, configure the APNs credentials for the same bundle identifier, then create a push campaign. Choose the required zone entry, exit, or dwell event for a location-triggered notification.
+
+#### 4. Build and run
+
+```bash
+flutter pub get
+cd ios && pod install && cd ..
+flutter run
+```
+
+Accept notification permission when prompted. The app registers with APNs only after permission is granted, and received/clicked PointSDK push events appear on the **Push Notifications** page.

@@ -35,7 +35,7 @@ dependencies:
     # the parent directory to use the current plugin's version.
     git:
       url: https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git
-      ref: dev/2.2.0
+      ref: dk/BD-7587
 #    bluedot_point_sdk:
 #    path: ../PointSDK-Flutter-Plugin  # Relative path to the plugin folder
 
@@ -43,7 +43,7 @@ dependencies:
   bluedot_point_sdk_push:
     git:
       url: https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git
-      ref: dev/2.2.0
+      ref: dk/BD-7587
       path: PointSDK-Flutter-Push
 
   # The following adds the Cupertino Icons font to your application.
@@ -60,7 +60,7 @@ dependency_overrides:
   bluedot_point_sdk:
     git:
       url: https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git
-      ref: dev/2.2.0
+      ref: dk/BD-7587
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
