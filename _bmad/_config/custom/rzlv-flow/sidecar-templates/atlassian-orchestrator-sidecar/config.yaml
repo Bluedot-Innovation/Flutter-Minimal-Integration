@@ -1,0 +1,35 @@
+# Atlassian Orchestrator Configuration
+# Installed to: _bmad/_memory/atlassian-orchestrator-sidecar/config.yaml
+agent_version: "1.0.0"
+
+# User Preferences
+user:
+  name: ""  # Your name (will be prompted if empty)
+  language: "English"
+
+# Atlassian Defaults (optional - will prompt if empty)
+atlassian:
+  instance: ""  # e.g., "your-company" (https://your-company.atlassian.net)
+
+jira:
+  default_project: ""   # e.g., "PROJ" (project key)
+  
+confluence:
+  default_space: ""       # e.g., "DOCS" (space key)
+  default_parent_page: "" # Optional: parent page title or ID for Initiative docs
+
+# Folder Conventions
+structure:
+  jira_base_path: "docs/jira/{atlassian_instance}/{project}"
+  confluence_base_path: "docs/confluence/{atlassian_instance}/{space}"
+  naming: "kebab-case"
+  docs_folder: "_docs"
+
+# Agent Behavior
+behavior:
+  mode: "autonomous"
+  default_confidence_threshold: 70
+  confirm_jira_target: true
+  confirm_confluence_target: true
+  auto_sync_jira: false
+  auto_sync_confluence: false
