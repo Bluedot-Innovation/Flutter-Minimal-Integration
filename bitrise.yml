@@ -1,4 +1,5 @@
-format_version: "11"
+---
+format_version: '11'
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: flutter
 workflows:
@@ -13,7 +14,7 @@ workflows:
     - git-clone@8: {}
     - flutter-installer@0:
         inputs:
-        - is_debug: "true"
+        - is_debug: 'true'
     - cache-pull@2: {}
     - set-java-version@1:
         inputs:
@@ -102,52 +103,52 @@ workflows:
     - change-android-versioncode-and-versionname@1:
         is_always_run: true
         inputs:
-        - new_version_name: $FLUTTER_PLUGIN_VERSION
-        - build_gradle_path: $BITRISE_SOURCE_DIR/android/app/build.gradle
+        - new_version_name: "$FLUTTER_PLUGIN_VERSION"
+        - build_gradle_path: "$BITRISE_SOURCE_DIR/android/app/build.gradle"
     - set-xcode-build-number@2:
         is_always_run: true
         inputs:
-        - build_short_version_string: $FLUTTER_PLUGIN_VERSION
-        - plist_path: $IOS_INFO_PLIST
+        - build_short_version_string: "$FLUTTER_PLUGIN_VERSION"
+        - plist_path: "$IOS_INFO_PLIST"
     - flutter-build@0:
         is_always_run: true
         inputs:
         - cache_level: none
-        - android_output_pattern: '*build/app/outputs/apk/*/*.apk'
+        - android_output_pattern: "*build/app/outputs/apk/*/*.apk"
     - sign-apk@1:
         inputs:
-        - use_apk_signer: "true"
-        - android_app: $BITRISE_APK_PATH
+        - use_apk_signer: 'true'
+        - android_app: "$BITRISE_APK_PATH"
     - xcode-archive@5:
         is_always_run: true
         inputs:
         - automatic_code_signing: api-key
-        - compile_bitcode: "no"
-        - upload_bitcode: "no"
+        - compile_bitcode: 'no'
+        - upload_bitcode: 'no'
         - distribution_method: ad-hoc
     - cache-push@2: {}
     - deploy-to-bitrise-io@2:
         inputs:
-        - is_enable_public_page: "false"
+        - is_enable_public_page: 'false'
         - notify_user_groups: none
     - slack@4:
         inputs:
-        - channel: ""
-        - emoji: ':tada:'
+        - channel: ''
+        - emoji: ":tada:"
         - from_username: Flutter Min App
-        - footer: ""
-        - webhook_url_on_error: $SLACK_WEBHOOK
-        - channel_on_error: ""
-        - text_on_error: ""
-        - emoji_on_error: ':sob:'
+        - footer: ''
+        - webhook_url_on_error: "$SLACK_WEBHOOK"
+        - channel_on_error: ''
+        - text_on_error: ''
+        - emoji_on_error: ":sob:"
         - from_username_on_error: Flutter Min App
-        - text: ""
+        - text: ''
         - buttons: |
             View App|${BITRISE_APP_URL}
             View Build|${BITRISE_BUILD_URL}
-        - pretext: '*:tada: Flutter Min App Downstream Build Succeeded! :tada:*'
-        - pretext_on_error: '*Oh no, Build Failed! :sob:*'
-        - webhook_url: $SLACK_WEBHOOK
+        - pretext: "*:tada: Flutter Min App Downstream Build Succeeded! :tada:*"
+        - pretext_on_error: "*Oh no, Build Failed! :sob:*"
+        - webhook_url: "$SLACK_WEBHOOK"
   min-app:
     description: |
       Builds project and runs tests.
@@ -163,9 +164,9 @@ workflows:
         - set_java_version: '17'
     - flutter-installer@0:
         inputs:
-        - is_update: "false"
+        - is_update: 'false'
         - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.7.12-stable.zip
-        - is_debug: "true"
+        - is_debug: 'true'
     - script@1:
         title: Install yq
         inputs:
@@ -211,61 +212,61 @@ workflows:
     - change-android-versioncode-and-versionname@1:
         is_always_run: true
         inputs:
-        - new_version_name: $FLUTTER_VERSION
-        - build_gradle_path: $BITRISE_SOURCE_DIR/android/app/build.gradle
+        - new_version_name: "$FLUTTER_VERSION"
+        - build_gradle_path: "$BITRISE_SOURCE_DIR/android/app/build.gradle"
     - set-xcode-build-number@2:
         is_always_run: true
         inputs:
-        - build_short_version_string: $FLUTTER_VERSION
-        - plist_path: $IOS_INFO_PLIST
+        - build_short_version_string: "$FLUTTER_VERSION"
+        - plist_path: "$IOS_INFO_PLIST"
     - flutter-build@0:
         is_always_run: true
         inputs:
         - cache_level: none
-        - android_output_pattern: '*build/app/outputs/apk/*/*.apk'
+        - android_output_pattern: "*build/app/outputs/apk/*/*.apk"
     - sign-apk@1:
         inputs:
-        - use_apk_signer: "true"
-        - android_app: $BITRISE_APK_PATH
+        - use_apk_signer: 'true'
+        - android_app: "$BITRISE_APK_PATH"
     - xcode-archive@5:
         title: Archive Build
         is_always_run: true
         inputs:
         - distribution_method: app-store
         - configuration: Release
-        - artifact_name: ""
-        - api_key_path: ""
+        - artifact_name: ''
+        - api_key_path: ''
         - automatic_code_signing: api-key
     - deploy-to-itunesconnect-deliver@2:
         is_always_run: true
         inputs:
         - connection: api_key
-        - app_id: $APPSTORE_ID
-        - distribute_external: "no" # Internal testing only
-        - groups: $APP_STORE_INTERNAL_TESTERS
+        - app_id: "$APPSTORE_ID"
+        - distribute_external: 'no'
+        - groups: "$APP_STORE_INTERNAL_TESTERS"
     - cache-push@2: {}
     - deploy-to-bitrise-io@2:
         inputs:
-        - is_enable_public_page: "false"
+        - is_enable_public_page: 'false'
         - notify_user_groups: none
     - slack@4:
         inputs:
-        - channel: ""
-        - emoji: ':tada:'
+        - channel: ''
+        - emoji: ":tada:"
         - from_username: Flutter Min App
-        - footer: ""
-        - webhook_url_on_error: $SLACK_WEBHOOK
-        - channel_on_error: ""
-        - text_on_error: ""
-        - emoji_on_error: ':sob:'
+        - footer: ''
+        - webhook_url_on_error: "$SLACK_WEBHOOK"
+        - channel_on_error: ''
+        - text_on_error: ''
+        - emoji_on_error: ":sob:"
         - from_username_on_error: Flutter Min App
-        - text: ""
+        - text: ''
         - buttons: |
             View App|${BITRISE_APP_URL}
             View Build|${BITRISE_BUILD_URL}
-        - pretext: '*:tada: Flutter Min App Build Succeeded! :tada:*'
-        - pretext_on_error: '*Oh no, Build Failed! :sob:*'
-        - webhook_url: $SLACK_WEBHOOK
+        - pretext: "*:tada: Flutter Min App Build Succeeded! :tada:*"
+        - pretext_on_error: "*Oh no, Build Failed! :sob:*"
+        - webhook_url: "$SLACK_WEBHOOK"
   min-app-fixed:
     description: |
       Builds project and runs tests.
@@ -281,9 +282,9 @@ workflows:
         - set_java_version: '17'
     - flutter-installer@0:
         inputs:
-        - is_update: "false"
+        - is_update: 'false'
         - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.7.12-stable.zip
-        - is_debug: "true"
+        - is_debug: 'true'
     - script@1:
         title: Install yq
         inputs:
@@ -329,64 +330,65 @@ workflows:
     - change-android-versioncode-and-versionname@1:
         is_always_run: true
         inputs:
-        - new_version_name: $FLUTTER_VERSION
-        - build_gradle_path: $BITRISE_SOURCE_DIR/android/app/build.gradle
+        - new_version_name: "$FLUTTER_VERSION"
+        - build_gradle_path: "$BITRISE_SOURCE_DIR/android/app/build.gradle"
     - set-xcode-build-number@2:
         is_always_run: true
         inputs:
-        - build_short_version_string: $FLUTTER_VERSION
-        - plist_path: $IOS_INFO_PLIST
+        - build_short_version_string: "$FLUTTER_VERSION"
+        - plist_path: "$IOS_INFO_PLIST"
     - flutter-build@0:
         is_always_run: true
         inputs:
         - cache_level: none
-        - android_output_pattern: '*build/app/outputs/apk/*/*.apk'
+        - android_output_pattern: "*build/app/outputs/apk/*/*.apk"
     - sign-apk@1:
         inputs:
-        - use_apk_signer: "true"
-        - android_app: $BITRISE_APK_PATH
+        - use_apk_signer: 'true'
+        - android_app: "$BITRISE_APK_PATH"
     - xcode-archive@5:
         title: Archive Build
         is_always_run: true
         inputs:
         - distribution_method: app-store
         - configuration: Release
-        - artifact_name: ""
-        - api_key_path: ""
+        - artifact_name: ''
+        - api_key_path: ''
         - automatic_code_signing: api-key
     - deploy-to-itunesconnect-deliver@2:
         is_always_run: true
         inputs:
         - connection: api_key
-        - app_id: $APPSTORE_ID
-        - distribute_external: "no" # Internal testing only
-        - groups: $APP_STORE_INTERNAL_TESTERS
+        - app_id: "$APPSTORE_ID"
+        - distribute_external: 'no'
+        - groups: "$APP_STORE_INTERNAL_TESTERS"
     - cache-push@2: {}
     - deploy-to-bitrise-io@2:
         inputs:
-        - is_enable_public_page: "false"
+        - is_enable_public_page: 'false'
         - notify_user_groups: none
     - slack@4:
         inputs:
-        - channel: ""
-        - emoji: ':tada:'
+        - channel: ''
+        - emoji: ":tada:"
         - from_username: Flutter Min App
-        - footer: ""
-        - webhook_url_on_error: $SLACK_WEBHOOK
-        - channel_on_error: ""
-        - text_on_error: ""
-        - emoji_on_error: ':sob:'
+        - footer: ''
+        - webhook_url_on_error: "$SLACK_WEBHOOK"
+        - channel_on_error: ''
+        - text_on_error: ''
+        - emoji_on_error: ":sob:"
         - from_username_on_error: Flutter Min App
-        - text: ""
+        - text: ''
         - buttons: |
             View App|${BITRISE_APP_URL}
             View Build|${BITRISE_BUILD_URL}
-        - pretext: '*:tada: Flutter Min App Build Succeeded! :tada:*'
-        - pretext_on_error: '*Oh no, Build Failed! :sob:*'
-        - webhook_url: $SLACK_WEBHOOK
+        - pretext: "*:tada: Flutter Min App Build Succeeded! :tada:*"
+        - pretext_on_error: "*Oh no, Build Failed! :sob:*"
+        - webhook_url: "$SLACK_WEBHOOK"
     meta:
       bitrise.io:
         stack: osx-xcode-26.2.x
+        machine_type_id: g2.mac.large
 meta:
   bitrise.io:
     stack: osx-xcode-26.2.x
@@ -395,35 +397,35 @@ app:
   envs:
   - opts:
       is_expand: false
-    BITRISE_FLUTTER_PROJECT_LOCATION: .
+    BITRISE_FLUTTER_PROJECT_LOCATION: "."
   - opts:
       is_expand: false
     FLUTTER_PLUGIN_GIT_REPO: git@github.com:Bluedot-Innovation/PointSDK-Flutter-Plugin.git
   - opts:
       is_expand: false
-    GRADLEW_PATH: ./android/gradlew
+    GRADLEW_PATH: "./android/gradlew"
   - opts:
       is_expand: false
-    BITRISE_PROJECT_PATH: ./ios/Runner.xcworkspace
+    BITRISE_PROJECT_PATH: "./ios/Runner.xcworkspace"
   - opts:
       is_expand: false
     BITRISE_SCHEME: Runner
   - opts:
       is_expand: false
-    IOS_INFO_PLIST: ./ios/Runner/Info.plist
+    IOS_INFO_PLIST: "./ios/Runner/Info.plist"
   - opts:
       is_expand: false
-    APP_RELEASE_NOTES_FILE: ./ReleaseNotes.md
+    APP_RELEASE_NOTES_FILE: "./ReleaseNotes.md"
   - opts:
       is_expand: false
-    PUBSPEC_YAML_FILE: ./pubspec.yaml
+    PUBSPEC_YAML_FILE: "./pubspec.yaml"
   - opts:
       is_expand: false
     FLUTTER_PLUGIN_NAME: PointSDK-Flutter-Plugin
   - opts:
       is_expand: false
-    PACKAGE_JSON_FILE: ./.dart_tool/package_config.json
-  - APPSTORE_ID: "6751217428"
+    PACKAGE_JSON_FILE: "./.dart_tool/package_config.json"
+  - APPSTORE_ID: '6751217428'
     opts:
       is_expand: false
   - APP_STORE_INTERNAL_TESTERS: Internal
@@ -432,5 +434,5 @@ app:
 trigger_map:
 - push_branch: release/*
   workflow: min-app
-- tag: '*-pre+build*'
+- tag: "*-pre+build*"
   workflow: downstream
