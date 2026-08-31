@@ -267,6 +267,9 @@ workflows:
         - pretext: "*:tada: Flutter Min App Build Succeeded! :tada:*"
         - pretext_on_error: "*Oh no, Build Failed! :sob:*"
         - webhook_url: "$SLACK_WEBHOOK"
+    meta:
+      bitrise.io:
+        machine_type_id: g2.mac.large
   min-app-fixed:
     description: |
       Builds project and runs tests.
