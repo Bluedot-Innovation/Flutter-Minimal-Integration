@@ -1,0 +1,56 @@
+# RZLV Flow - Runtime Configuration Template
+# ============================================
+# This file is copied to _bmad/_config/rzlv-flow.yaml during installation.
+# Edit that file to customize your settings.
+#
+# Installation: npx @bmad/rzlv-flow install
+# Documentation: See README.md
+
+# Atlassian Connection
+# --------------------
+# These values are populated during installation from user prompts.
+atlassian:
+  instance: "{atlassian_instance}"     # e.g., "company" for company.atlassian.net
+  jira_project: "{jira_project}"       # e.g., "PROJ"
+  confluence_space: "{confluence_space}" # e.g., "DOCS" (optional)
+  user_email: "{user_email}"           # For "my tickets" queries (optional)
+
+# Installed Agents
+# ----------------
+# Agents selected during installation. Remove to disable.
+installed_agents:
+  - context-analyst      # Lexa - Transcript processor
+  - atlassian-orchestrator  # Atlas - Jira/Confluence orchestrator
+  - agile-companion      # Ace - Developer daily workflow
+
+# Platform
+# --------
+# Target platform selected during installation.
+platform: github-copilot  # github-copilot | cursor | manual
+
+# Agent Behavior
+# --------------
+# Customize how agents operate. These are safe to modify.
+behavior:
+  # Require confirmation before syncing to Jira/Confluence
+  confirm_before_sync: true
+  
+  # Automatically sync changes (not recommended for most users)
+  auto_sync: false
+  
+  # Assumptions below this confidence level get highlighted
+  default_confidence_threshold: 70
+  
+  # Show detailed diffs during FCMP operations
+  show_diffs: true
+  
+  # Create _work/ folders for developer notes
+  create_work_folders: true
+
+# Output Paths
+# ------------
+# Where agents create their output files.
+paths:
+  context_documents: "docs/context/"
+  jira_local: "docs/jira/{atlassian.instance}/{atlassian.jira_project}/"
+  confluence_local: "docs/confluence/{atlassian.instance}/{atlassian.confluence_space}/"
