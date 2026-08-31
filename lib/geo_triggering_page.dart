@@ -208,29 +208,13 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
           break;
         case GeoTriggeringEvents.didEnterZone:
           debugPrint('Did Enter Zone: $args');
+          
+          final event = Map<String, dynamic>.from(args as Map);
+          final zoneInfo = Map<String, dynamic>.from(event['zoneInfo'] as Map);
+          final zoneName = zoneInfo['name'];
+          debugPrint('Did Enter Zone: $zoneName');
 
-             //Get CustomEventMetaData and print in log
-             BluedotPointSdk.instance.getCustomEventMetaData().then((value) {
-                print(value);
-                if(value != null && value.isEmpty) {
-
-                  debugPrint('Custom Event MetaData setting');
-                 //Set CustomEventMetaData
-                              final Map<String, String> someMap = {
-                                             "key1": "MinApp",
-                                             "Key2": "TestData",
-                              };
-
-                  BluedotPointSdk.instance.setCustomEventMetaData(someMap);
-                }
-
-              });
-
-
-
-
-
-          showAlert(geoTriggeringAlertTitle, 'Did Enter Zone: $args', context);
+          showAlert(geoTriggeringAlertTitle, 'Did Enter Zone: $zoneName', context);
           break;
         case GeoTriggeringEvents.didExitZone:
           debugPrint('Did Exit Zone: $args');

@@ -1,0 +1,53 @@
+# Post-Workflow Hook: Atlassian Sync
+# Triggers after BMAD *create-epics-and-stories completes
+
+name: atlassian-sync
+type: post-workflow-hook
+trigger: create-epics-and-stories.complete
+version: "1.0.0"
+
+# What this hook does
+description: |
+  Activates the Atlassian Sync workflow driven by Atlas agent.
+  The workflow has 5 discrete, resumable steps with state persistence.
+
+# Workflow activation
+activate:
+  workflow: "{project-root}/_bmad/rzlv-flow/workflows/atlassian-sync/workflow.md"
+  agent: atlassian-orchestrator
+  first_step: "{workflow_path}/steps/step-01-setup.md"
+  state_file: "{project-root}/_bmad/_memory/atlassian-orchestrator-sidecar/workflow-state.yaml"
+  
+# Context passed to workflow
+context:
+  scan_for:
+    - "{bmad_output}/*product*brief*.md"
+    - "{bmad_output}/*prd*.md"
+    - "{bmad_output}/*architecture*.md"
+    - "{bmad_output}/*ux*.md"
+    - "{bmad_output}/*epics*.md"
+
+# User prompt before activation
+prompt: |
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ✅ Epics and stories generated!
+  
+  🎯 Ready for Atlassian Sync?
+  
+  Atlas will guide you through:
+  • Step 1: Setup (confirm targets, load docs)
+  • Step 2: Generate local structure
+  • Step 3: Sync to Confluence
+  • Step 4: Sync to Jira
+  • Step 5: Summary report
+  
+  You can pause and resume anytime.
+  
+  [Y] Yes - Start Atlassian Sync
+  [N] No - I'll do it manually later
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Behavior
+config:
+  require_confirmation: true
+  check_existing_state: true  # Offer resume if workflow-state.yaml exists
