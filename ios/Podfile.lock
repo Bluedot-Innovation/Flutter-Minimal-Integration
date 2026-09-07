@@ -1,8 +1,8 @@
 PODS:
-  - bluedot_point_sdk (2.1.3):
-    - BluedotPointSDK (= 17.2.0)
+  - bluedot_point_sdk (2.1.4):
+    - BluedotPointSDK (= 17.2.1)
     - Flutter
-  - BluedotPointSDK (17.2.0)
+  - BluedotPointSDK (17.2.1)
   - Flutter (1.0.0)
   - permission_handler_apple (9.4.8):
     - Flutter
