@@ -149,9 +149,12 @@ workflows:
         - pretext: "*:tada: Flutter Min App Downstream Build Succeeded! :tada:*"
         - pretext_on_error: "*Oh no, Build Failed! :sob:*"
         - webhook_url: "$SLACK_WEBHOOK"
-  min-app-xcode-27:
+  min-app-xcode27:
     description: |
-            Build the Minimal App with the min-app workflow on Xcode 27.
+      Builds project and runs tests.
+
+      Next steps:
+      - Check out [Getting started with Flutter apps](https://devcenter.bitrise.io/en/getting-started/getting-started-with-flutter-apps.html).
     steps:
     - activate-ssh-key@4: {}
     - git-clone@8: {}
@@ -192,7 +195,7 @@ workflows:
               exit 1
             fi
     - script@1:
-        title: Run flutter pub get
+        title: run flutter pub get
         inputs:
         - content: |
             #!/usr/bin/env bash
@@ -254,8 +257,6 @@ workflows:
         - artifact_name: ''
         - api_key_path: ''
         - automatic_code_signing: api-key
-        - compile_bitcode: 'no'
-        - upload_bitcode: 'no'
     - deploy-to-itunesconnect-deliver@2:
         is_always_run: true
         inputs:
@@ -288,8 +289,8 @@ workflows:
         - webhook_url: "$SLACK_WEBHOOK"
     meta:
       bitrise.io:
-        stack: osx-xcode-27.0.x-edge
-        machine_type_id: g2.mac.medium
+        stack: osx-xcode-27.0.x
+        machine_type_id: g2.mac.large
   min-app:
     description: |
       Builds project and runs tests.
@@ -343,7 +344,7 @@ workflows:
         - content: |-
             #!/usr/bin/env bash
 
-            FLUTTER_VERSION=$(yq ".version" " $PUBSPEC_YAML_FILE")
+            FLUTTER_VERSION=$(yq ".version" "$PUBSPEC_YAML_FILE")
 
             echo "Found version: ${FLUTTER_VERSION}"
 
