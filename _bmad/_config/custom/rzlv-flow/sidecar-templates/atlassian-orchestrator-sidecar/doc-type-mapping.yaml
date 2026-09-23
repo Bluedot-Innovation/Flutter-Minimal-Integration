@@ -1,0 +1,84 @@
+# Documentation Type Mapping
+# Maps _docs/ files to Confluence page categories and organization
+
+confluence_categories:
+  strategic-context:
+    title: "Strategic Context"
+    description: "Business goals, product vision, and strategic decisions"
+    sources:
+      bmad_primary:
+        - "docs/*prd*.md"
+        - "docs/prd/"
+      agent_enrichment:
+        - "initiative/_docs/context.md"
+        - "initiative/_docs/product-context.md"
+    icon: "📋"
+    
+  technical-architecture:
+    title: "Technical Architecture"
+    description: "System design, technical decisions, and implementation patterns"
+    sources:
+      bmad_primary:
+        - "docs/*architecture*.md"
+        - "docs/architecture/"
+      agent_enrichment:
+        - "epic/_docs/technical-notes.md"
+        - "story/_docs/technical-design.md"
+    icon: "🏗️"
+    
+  decisions:
+    title: "Decision Log"
+    description: "All key decisions made across initiative and epics"
+    sources:
+      agent_primary:
+        - "**/_docs/decision-log.md"
+    consolidate: true
+    icon: "✅"
+    
+  research-and-findings:
+    title: "Research & Findings"
+    description: "User research, discoveries, and clarifications"
+    sources:
+      bmad_primary:
+        - "docs/*ux*.md"
+        - "docs/ux/"
+      agent_enrichment:
+        - "epic/_docs/user-research.md"
+        - "epic/_docs/clarification-log.md"
+    icon: "🔍"
+    
+  implementation-guidance:
+    title: "Implementation Guidance"
+    description: "High-value technical guides for development"
+    sources:
+      agent_primary:
+        - "story/_docs/technical-design.md"
+    filter: "only_if_substantial"
+    icon: "📚"
+    
+  assumptions:
+    title: "Assumptions & Validations"
+    description: "All assumptions made during planning with confidence levels"
+    sources:
+      agent_primary:
+        - "**/_docs/assumptions-log.md"
+    consolidate: true
+    icon: "💡"
+
+# Files to EXCLUDE from Confluence
+exclude_from_confluence:
+  - "story/*.md"
+  - "task/*.md"
+  - "bug/*.md"
+  - "subtask/*.md"
+  - "**/_docs/implementation-notes.md"
+  - "**/_docs/subtask-context.md"
+  - "**/_docs/edge-cases.md"
+  - "**/_docs/test-scenarios.md"
+
+# Organization strategy
+organization_strategy:
+  pattern: "hybrid"
+  consolidate_similar: true
+  add_navigation: true
+  bmad_docs_first: true

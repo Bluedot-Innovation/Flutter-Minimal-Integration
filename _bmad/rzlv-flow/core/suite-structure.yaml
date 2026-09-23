@@ -1,0 +1,233 @@
+# RZLV Flow - Shared Structure Definition
+# Version: 1.0.0
+# All agents in the suite reference this single source of truth
+
+suite:
+  name: "rzlv-flow"
+  version: "1.0.0"
+  display_name: "RZLV Flow - AI Agile Toolkit"
+
+# Shared file structure used by ALL agents
+file_structure:
+  jira:
+    base_path: "docs/jira/{instance}/{project}/"
+    
+    # Hierarchy rules - all agents follow this
+    hierarchy:
+      epic: "{epic-name}/epic.md"
+      story: "{epic-name}/stories/{TICKET-KEY}/{TICKET-KEY}.md"
+      subtask: "{epic-name}/stories/{PARENT-KEY}/subtasks/{TICKET-KEY}/{TICKET-KEY}.md"
+      orphan: "_orphans/{TICKET-KEY}/{TICKET-KEY}.md"
+      
+    # File ownership within ticket folders
+    ownership:
+      sync_state:
+        file: "{TICKET-KEY}.md"
+        owners: ["atlassian-orchestrator", "agile-companion"]
+        protocol: "FCMP"
+        description: "Jira metadata, sync state, description, acceptance criteria"
+        
+      generated_docs:
+        folder: "_docs/"
+        owner: "atlassian-orchestrator"
+        read_by: ["agile-companion", "context-analyst"]
+        description: "Technical architecture, decisions, strategic context"
+        
+      developer_workspace:
+        folder: "_work/"
+        owner: "agile-companion"
+        gitignored: true
+        description: "Scratch notes, checklists, local context"
+        
+      subtasks:
+        folder: "subtasks/"
+        owners: ["atlassian-orchestrator", "agile-companion"]
+        description: "Child tickets following same structure"
+
+    # Smart creation rules
+    smart_rules:
+      - id: "epic-exists"
+        condition: "Epic structure found in base_path"
+        action: "Use existing structure, add agent-specific folders"
+        
+      - id: "epic-missing"
+        condition: "No epic structure found"
+        action: "Create in _orphans/, move when epic created later"
+        
+      - id: "parent-requested"
+        condition: "User requests parent ticket context"
+        action: "Fetch parent, create parent structure, move ticket into it"
+        
+      - id: "subtasks-requested"
+        condition: "User requests subtask list/creation"
+        action: "Create subtasks/ folder, populate with fetched tickets"
+
+  confluence:
+    base_path: "docs/confluence/{instance}/{space}/"
+    
+    # Two modes: Structured (Orchestrator) and Flexible (manual/ad-hoc)
+    modes:
+      structured:
+        description: "Orchestrator-driven: epic-based structure with predefined page types"
+        hierarchy:
+          initiative: "{initiative-name}/"
+          epic: "{initiative-name}/{epic-name}/"
+        page_types:
+          overview: "{epic-name}/overview.md"
+          technical_architecture: "{epic-name}/technical-architecture.md"
+          decisions: "{epic-name}/decisions.md"
+          strategic_context: "{epic-name}/strategic-context.md"
+        use_when: "Creating from Jira epic structure with _docs/ content"
+        
+      flexible:
+        description: "Ad-hoc: user-specified location and page structure"
+        hierarchy:
+          custom_path: "{user-specified-path}/"
+          flat: "{page-name}.md"
+        page_types:
+          freeform: "Any markdown document"
+        use_when: "Generic documentation, manual publishing, user-driven organization"
+        prompts:
+          - "Where should I place this page in Confluence? (space/parent)"
+          - "Page title?"
+          - "Should I link to a Jira ticket?"
+      
+    # Ownership (applies to both modes)
+    ownership:
+      generated_pages:
+        owner: "atlassian-orchestrator"
+        source: "_docs/ from Jira structure (structured mode)"
+        mapping: "sidecar/doc-type-mapping.yaml"
+        description: "Orchestrator generates from _docs/, syncs to Confluence"
+        
+      manual_pages:
+        owner: "user|any-agent"
+        source: "Any markdown file"
+        location: "User-specified or derived from context"
+        description: "Ad-hoc documentation, later published to Confluence"
+        
+      manual_edits:
+        preserved: true
+        protocol: "FCMP"
+        description: "User edits in Confluence preserved during sync (both modes)"
+    
+    # Sync rules (apply based on mode)
+    sync_rules:
+      structured:
+        - "Generate Confluence pages from Jira _docs/ folders"
+        - "Sync BEFORE Jira creation (to get page IDs for linking)"
+        - "Embed Confluence links in Jira ticket descriptions"
+        - "Follow initiative/epic hierarchy"
+        
+      flexible:
+        - "User specifies target location (space + parent page)"
+        - "Optional: Link back to Jira ticket if provided"
+        - "No predefined structure - adapt to user's needs"
+        - "Can publish existing docs to Confluence retroactively"
+        
+      both:
+        - "Follow FCMP protocol when updating existing pages"
+        - "Preserve manual edits made in Confluence"
+        - "Store page ID and URL in frontmatter after sync"
+
+# Sync state format - all agents must follow this
+sync_state_format:
+  jira_ticket:
+    frontmatter:
+      sync:
+        jira_key: "string"
+        jira_ari: "string"
+        status: "string"
+        assignee: "string"
+        priority: "string"
+        story_points: "number"
+        last_synced: "ISO8601"
+        version: "number"
+        remote_updated: "ISO8601"
+        
+      structure:
+        type: "epic|story|subtask|task|bug"
+        parent: "string (relative path)"
+        epic: "string (epic key)"
+        
+      # Agent-specific metadata (optional, add as needed)
+      agile_companion:
+        last_focused: "ISO8601"
+        working_branch: "string"
+        local_commits: "number"
+        
+      orchestrator:
+        generated_at: "ISO8601"
+        confluence_page_id: "string"
+        confluence_url: "string"
+        
+    body:
+      format: "markdown"
+      sections:
+        - "# {Summary from Jira}"
+        - "## Description"
+        - "## Acceptance Criteria"
+        - "## Technical Notes (optional)"
+  
+  confluence_page:
+    frontmatter:
+      sync:
+        confluence_page_id: "string"
+        confluence_url: "string"
+        space: "string"
+        parent_page_id: "string"
+        last_synced: "ISO8601"
+        version: "number"
+        remote_updated: "ISO8601"
+        
+      mode: "structured|flexible"
+        
+      source:
+        jira_ticket: "string (ticket key, optional)"
+        doc_type: "overview|technical|decisions|strategic"
+        generated_from: "string (path to _docs/ file)"
+        origin: "manual|context-analyst|agile-companion"
+        linked_jira: "string (ticket key, optional)"
+        
+      orchestrator:
+        generated_at: "ISO8601"
+        auto_sync: "boolean"
+        
+    body:
+      format: "markdown"
+      note: "Converted to Confluence storage format during sync"
+
+# Shared protocols
+protocols:
+  sync: "{project-root}/_bmad/rzlv-flow/core/sync-instructions/atlassian-sync-protocol.md"
+  structure: "{project-root}/_bmad/rzlv-flow/core/sync-instructions/jira-file-structure.md"
+
+# Agent-specific extensions
+agent_extensions:
+  atlassian-orchestrator:
+    jira:
+      creates: ["_docs/", "epic.md", "stories/"]
+      never_modifies: ["_work/"]
+    confluence:
+      creates: ["All page types from _docs/"]
+      mapping: "sidecar/doc-type-mapping.yaml"
+      
+  agile-companion:
+    jira:
+      creates: ["_work/"]
+      reads: ["_docs/", "epic.md"]
+      never_modifies: ["_docs/"]
+    confluence:
+      reads: ["All pages (for context)"]
+      
+  context-analyst:
+    jira:
+      reads: ["_docs/"]
+    confluence:
+      can_publish: "Context documents as Confluence pages"
+    creates_elsewhere: "docs/context/{feature-name}-transcript.md"
+
+# Gitignore rules
+gitignore:
+  - "**/_work/"
+  - "**/.DS_Store"
