@@ -4,7 +4,7 @@
 > | Platform | Status |
 > |----------|--------|
 > | Android  | ✅ Implemented |
-> | iOS      | 🚧 Not yet implemented |
+> | iOS      | ✅ Implemented |
 
 ---
 
@@ -71,3 +71,100 @@ flutter run          # or: PUSH_ENABLED=true flutter run
 ```
 
 The **Push Notifications** button will appear on the home screen and the app will request notification permission on launch.
+
+---
+
+## Enabling Push Notifications - iOS (opt-in)
+
+Push notifications are disabled by default. The plugin forwards the APNs device token to PointSDK
+automatically, but the **app owns `UNUserNotificationCenterDelegate`** and forwards foreground and
+tap callbacks into the plugin. Flutter delivers those callbacks to every registered plugin with the
+same completion handler, so a plugin implementing them can race the app or another plugin to
+complete it; owning them in the app also leaves the presentation options to the app.
+
+### Prerequisites
+
+- An Apple Developer App ID and provisioning profile with the Push Notifications capability.
+- A bundle identifier matching that App ID (the sample default is `io.bluedot.flutterMinIntegrationApp`).
+- An APNs authentication key or certificate configured for the app in Bluedot Canvas.
+- A Bluedot Canvas project with a push campaign and location-based trigger configured.
+- The iOS deployment target set to 15.0 or later.
+- A physical iOS device. APNs registration and location-triggered delivery should not be validated on the simulator.
+
+### iOS – step-by-step
+
+#### 1. Configure signing
+
+Open `ios/Runner.xcworkspace` in Xcode, select the **Runner** target, then choose your team and an APNs-enabled bundle identifier under **Signing & Capabilities**. The sample already includes the Push Notifications capability and the `remote-notification` background mode.
+
+#### 2. Forward notification callbacks from `AppDelegate`
+
+This is already wired up in `ios/Runner/AppDelegate.swift`:
+
+```swift
+import UserNotifications
+import bluedot_point_sdk_push
+
+override func application(
+  _ application: UIApplication,
+  didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+) -> Bool {
+  UNUserNotificationCenter.current().delegate = self
+  return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+}
+
+override func userNotificationCenter(
+  _ center: UNUserNotificationCenter,
+  willPresent notification: UNNotification,
+  withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+) {
+  let handled = BluedotPointSdkPushPlugin.handleForegroundNotification(notification)
+  completionHandler(handled ? [.banner, .list, .sound, .badge] : [.banner, .list])
+}
+
+override func userNotificationCenter(
+  _ center: UNUserNotificationCenter,
+  didReceive response: UNNotificationResponse,
+  withCompletionHandler completionHandler: @escaping () -> Void
+) {
+  BluedotPointSdkPushPlugin.handleNotificationResponse(response)
+  completionHandler()
+}
+```
+
+**Do not call `super` in the two methods above** while also completing the handler yourself — the
+handler must be completed exactly once.
+
+Note this app uses the UIScene lifecycle (`ios/Runner/SceneDelegate.swift` creates the engine), so
+plugins are registered *after* `didFinishLaunchingWithOptions`. Setting the notification-centre
+delegate in `AppDelegate` is what makes the callbacks above reliable.
+
+#### 3. Set `PUSH_ENABLED` to true
+
+Open `ios/Runner/Info.plist` and change:
+
+```xml
+<key>PUSH_ENABLED</key>
+<false/>
+```
+
+to:
+
+```xml
+<key>PUSH_ENABLED</key>
+<true/>
+```
+
+#### 4. Configure Canvas
+
+In Bluedot Canvas, configure the APNs credentials for the same bundle identifier, then create a push campaign. Choose the required zone entry, exit, or dwell event for a location-triggered notification.
+
+#### 5. Build and run
+
+```bash
+flutter pub get
+cd ios && pod install && cd ..
+flutter run
+```
+
+Accept notification permission when prompted. The app registers with APNs only after permission is granted, and received/clicked PointSDK push events appear on the **Push Notifications** page.

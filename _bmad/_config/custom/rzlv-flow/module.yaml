@@ -1,0 +1,15 @@
+code: rzlv-flow
+name: "RZLV Flow - AI Agile Toolkit"
+header: "RZLV Flow Configuration"
+subheader: "Configure Jira and Confluence integration settings for your project"
+default_selected: false
+
+jira_project:
+  prompt: "Enter your default Jira project key (e.g., 'PROJ')"
+  default: ""
+  result: "{value}"
+
+confluence_space:
+  prompt: "Enter your Confluence space key (optional, press Enter to skip)"
+  default: ""
+  result: "{value}"

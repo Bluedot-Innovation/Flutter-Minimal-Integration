@@ -34,13 +34,16 @@ class _MyAppState extends State<MyApp> {
     // Notification permission and push listener are only needed when push is
     // enabled — avoids prompts and Firebase wiring on builds without FCM.
     if (await AppConfig.isPushEnabled()) {
-      await Permission.notification.request();
-      _setupPushListener();
+      await _setupPushListener();
+      final status = await Permission.notification.request();
+      if (status.isGranted || status.isProvisional) {
+        await BluedotPointSdkPush.instance.registerForRemoteNotifications();
+      }
     }
   }
 
-  void _setupPushListener() {
-    BluedotPointSdkPush.instance.setNotificationListener(
+  Future<void> _setupPushListener() async {
+    await BluedotPointSdkPush.instance.setNotificationListener(
       onReceived: (data) {
         PushNotificationManager.instance.addEvent(
           PushNotificationEvent.fromMap('received', data),
