@@ -13,8 +13,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "dk/BD-7587"
-      resolved-ref: "9e058d78ea85601c2274003590e148ff87a52c2d"
+      ref: "dev/2.2.0"
+      resolved-ref: "1ad3bdb26405d7efb3c0dad6f967404d7ab1e24d"
       url: "https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git"
     source: git
     version: "2.2.0"
@@ -22,8 +22,8 @@ packages:
     dependency: "direct main"
     description:
       path: PointSDK-Flutter-Push
-      ref: "dk/BD-7587"
-      resolved-ref: "9e058d78ea85601c2274003590e148ff87a52c2d"
+      ref: "dev/2.2.0"
+      resolved-ref: "1ad3bdb26405d7efb3c0dad6f967404d7ab1e24d"
       url: "https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git"
     source: git
     version: "1.0.0"
