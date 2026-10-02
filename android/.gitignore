@@ -14,3 +14,5 @@ key.properties
 /.idea
 /.gradle
 *.iml
+
+/app/google-services.json

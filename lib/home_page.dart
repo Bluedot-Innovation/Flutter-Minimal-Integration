@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bluedot_point_sdk/bluedot_point_sdk.dart';
+import 'package:flutter_minimal_integration/helpers/app_config.dart';
 import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,19 +15,16 @@ class _HomePageState extends State<HomePage> {
   String _installRef = '';
   String _sdkVersion = '';
   String _projectId = '';
+  bool _pushEnabled = false;
 
   @override
   void initState() {
     super.initState();
     BluedotPointSdk.instance.getInstallRef().then((value) {
-      setState(() {
-        _installRef = value;
-      });
+      if (mounted) setState(() => _installRef = value);
     });
     BluedotPointSdk.instance.getSDKVersion().then((value) {
-      setState(() {
-        _sdkVersion = value;
-      });
+      if (mounted) setState(() => _sdkVersion = value);
     });
 
    //Set CustomEventMetaData
@@ -41,6 +39,9 @@ class _HomePageState extends State<HomePage> {
       print(value);
     });
     _retrieveProjectId();
+    AppConfig.isPushEnabled().then((value) {
+      if (mounted) setState(() => _pushEnabled = value);
+    });
   }
 
   void _openGeoTriggeringPage() {
@@ -49,6 +50,10 @@ class _HomePageState extends State<HomePage> {
 
   void _openTempoPage() {
     Navigator.pushNamed(context, '/tempo');
+  }
+
+  void _openPushNotificationsPage() {
+    Navigator.pushNamed(context, '/push-notifications');
   }
 
   void _resetSdk() {
@@ -62,9 +67,7 @@ class _HomePageState extends State<HomePage> {
   void _retrieveProjectId() async {
     final sharedPrefs = await SharedPreferences.getInstance();
     var projectId = sharedPrefs.getString('projectId') ?? '';
-    setState(() {
-      _projectId = projectId;
-    });
+    if (mounted) setState(() => _projectId = projectId);
   }
 
   @override
@@ -121,6 +124,10 @@ class _HomePageState extends State<HomePage> {
                           child: const Text('GEO-TRIGGERING')),
                       ElevatedButton(
                           onPressed: _openTempoPage, child: const Text('TEMPO')),
+                      if (_pushEnabled)
+                        ElevatedButton(
+                            onPressed: _openPushNotificationsPage,
+                            child: const Text('PUSH NOTIFICATIONS')),
                       ElevatedButton(
                           onPressed: _resetSdk, child: const Text('RESET SDK')),
                     ],
