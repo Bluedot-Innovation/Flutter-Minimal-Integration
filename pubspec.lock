@@ -12,20 +12,18 @@ packages:
   bluedot_point_sdk:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "dev/2.2.0"
-      resolved-ref: "1ad3bdb26405d7efb3c0dad6f967404d7ab1e24d"
-      url: "https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git"
-    source: git
+      name: bluedot_point_sdk
+      sha256: b8982347d863ae1a8747fed38d728ba3e4f382c8444f7469623f532a1db4789e
+      url: "https://pub.dev"
+    source: hosted
     version: "2.2.0"
   bluedot_point_sdk_push:
     dependency: "direct main"
     description:
-      path: PointSDK-Flutter-Push
-      ref: "dev/2.2.0"
-      resolved-ref: "1ad3bdb26405d7efb3c0dad6f967404d7ab1e24d"
-      url: "https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git"
-    source: git
+      name: bluedot_point_sdk_push
+      sha256: c02f5bf7acd5ca8bd02cd2bf301e591ef41de7532f881598468066489640b512
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   boolean_selector:
     dependency: transitive

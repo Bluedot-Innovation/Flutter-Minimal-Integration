@@ -36,9 +36,19 @@ workflows:
                 echo $FLUTTER_PLUGIN_GIT_REPO
                 echo $BITRISE_GIT_TAG
                 
+                # The core package lives at the repository root.
                 yq -i e '.dependencies.bluedot_point_sdk = null' pubspec.yaml
                 REPO=$FLUTTER_PLUGIN_GIT_REPO yq -i e '.dependencies.bluedot_point_sdk.git.url = strenv(REPO)' pubspec.yaml
                 TAG=$BITRISE_GIT_TAG yq -i e '.dependencies.bluedot_point_sdk.git.ref = strenv(TAG)' pubspec.yaml
+
+                # The push module lives in a subdirectory of the same repository and tag.
+                # Without the path, pub looks for a pubspec.yaml at the repository root
+                # and fails. Both packages must come from the tag, or the build tests the
+                # core from the tag against a published push module.
+                yq -i e '.dependencies.bluedot_point_sdk_push = null' pubspec.yaml
+                REPO=$FLUTTER_PLUGIN_GIT_REPO yq -i e '.dependencies.bluedot_point_sdk_push.git.url = strenv(REPO)' pubspec.yaml
+                TAG=$BITRISE_GIT_TAG yq -i e '.dependencies.bluedot_point_sdk_push.git.ref = strenv(TAG)' pubspec.yaml
+                yq -i e '.dependencies.bluedot_point_sdk_push.git.path = "PointSDK-Flutter-Push"' pubspec.yaml
       - script@1:
           title: run flutter pub get
           inputs:
