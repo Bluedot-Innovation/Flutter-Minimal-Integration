@@ -71,9 +71,10 @@ class _InitialPageState extends State<InitialPage> {
     BluedotPointSdk.instance.isInitialized().then((value) {
       if (value) {
         Navigator.pushNamed(context, '/home');
+      } else {
+        clearSharedPreferences();
       }
     });
-    clearSharedPreferences();
   }
 
   @override

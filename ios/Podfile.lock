@@ -1,10 +1,13 @@
 PODS:
-  - bluedot_point_sdk (2.1.4):
-    - BluedotPointSDK (= 17.2.1)
+  - bluedot_point_sdk (2.2.0):
+    - BluedotPointSDK (= 18.1.0)
     - Flutter
-  - BluedotPointSDK (17.2.1)
+  - bluedot_point_sdk_push (1.0.0):
+    - BluedotPointSDK (= 18.1.0)
+    - Flutter
+  - BluedotPointSDK (18.1.0)
   - Flutter (1.0.0)
-  - permission_handler_apple (9.4.8):
+  - permission_handler_apple (9.3.0):
     - Flutter
   - shared_preferences_foundation (0.0.1):
     - Flutter
@@ -12,6 +15,7 @@ PODS:
 
 DEPENDENCIES:
   - bluedot_point_sdk (from `.symlinks/plugins/bluedot_point_sdk/ios`)
+  - bluedot_point_sdk_push (from `.symlinks/plugins/bluedot_point_sdk_push/ios`)
   - Flutter (from `Flutter`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
@@ -23,6 +27,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   bluedot_point_sdk:
     :path: ".symlinks/plugins/bluedot_point_sdk/ios"
+  bluedot_point_sdk_push:
+    :path: ".symlinks/plugins/bluedot_point_sdk_push/ios"
   Flutter:
     :path: Flutter
   permission_handler_apple:
@@ -31,12 +37,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
-  bluedot_point_sdk: 3b2ed081e0a60ed578ef6192d0ba7833bc2440d9
-  BluedotPointSDK: 46db4abe89d9b90981808c5e382dcd8076c333a9
+  bluedot_point_sdk: c822bfbc14cb4df0377f96251e715b124ea63834
+  bluedot_point_sdk_push: 609f0e50db755dc544c152e549bfaa573b3a9fc5
+  BluedotPointSDK: 07bc66ee8c9f2d99b99cf029bd57d74d4b9c34f8
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  permission_handler_apple: 92d754bbaa7361d436db2d6c3c1c2a0fdcec462e
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
 
-PODFILE CHECKSUM: 1770f29565c64955b79c0300f4b6c99dd321a0d0
+PODFILE CHECKSUM: e6fff38ba656f0f08fe9b4654bb6a9ae8c060821
 
 COCOAPODS: 1.16.2
