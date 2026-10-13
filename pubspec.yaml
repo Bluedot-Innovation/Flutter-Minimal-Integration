@@ -29,10 +29,17 @@ dependencies:
   shared_preferences: ^2.5.4
   # Published on pub.dev. This is how a real integrating app should depend on the
   # plugin: no git refs, no dependency_overrides.
-  bluedot_point_sdk: ^2.2.0
+  # bluedot_point_sdk: ^2.2.0
+  # DEV ONLY (BD-8390) — testing local, unpublished plugin changes (Point SDK 19.0.0
+  # host-owned foreground service migration). Revert to the pub.dev version above once
+  # bluedot_point_sdk 3.0.0 is published.
+  bluedot_point_sdk:
+    path: ../PointSDK-Flutter-Plugin
 
   # Optional push notifications module — requires PUSH_ENABLED=true at build time.
-  bluedot_point_sdk_push: ^1.0.0
+  # bluedot_point_sdk_push: ^1.0.0
+  bluedot_point_sdk_push:
+    path: ../PointSDK-Flutter-Push
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -41,6 +48,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+
+# DEV ONLY (BD-8390) — forces bluedot_point_sdk_push's hosted dependency on
+# bluedot_point_sdk to resolve to the same local path version used above, instead of
+# pub.dev. Remove once testing against local plugin changes is no longer needed.
+dependency_overrides:
+  bluedot_point_sdk:
+    path: ../PointSDK-Flutter-Plugin
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
