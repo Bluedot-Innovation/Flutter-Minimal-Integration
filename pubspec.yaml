@@ -37,7 +37,7 @@ dependencies:
     path: ../PointSDK-Flutter-Plugin
 
   # Optional push notifications module — requires PUSH_ENABLED=true at build time.
-  # bluedot_point_sdk_push: ^1.0.0
+  # bluedot_point_sdk_push: ^2.0.0
   bluedot_point_sdk_push:
     path: ../PointSDK-Flutter-Plugin/PointSDK-Flutter-Push
 

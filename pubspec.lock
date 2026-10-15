@@ -22,7 +22,7 @@ packages:
       path: "../PointSDK-Flutter-Plugin/PointSDK-Flutter-Push"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "2.0.0"
   boolean_selector:
     dependency: transitive
     description:
