@@ -3,6 +3,7 @@ import 'package:flutter_minimal_integration/helpers/constants.dart';
 import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'helpers/foreground_service.dart';
 import 'helpers/show_alert.dart';
 import 'dart:math';
 
@@ -22,12 +23,6 @@ class _TempoPageState extends State<TempoPage> {
   /// Start tempo tracking
   void _startTempo() {
     if (_tempoFormKey.currentState!.validate()) {
-
-      String androidNotificationTitle = 'Bluedot Foreground Service - Tempo';
-      String androidNotificationContent =
-          'This app is running a foreground service using location service';
-      int androidNotificationId = 123;
-
       var destinationId = textFieldController.text.trim();
 
       // Set custom event metadata.
@@ -38,14 +33,13 @@ class _TempoPageState extends State<TempoPage> {
       };
       BluedotPointSdk.instance.setCustomEventMetaData(metadata);
 
-      BluedotPointSdk.instance
-          .tempoBuilder()
-          .androidNotification(bluedotChannelId, bluedotChannelName, androidNotificationTitle,
-              androidNotificationContent, androidNotificationId)
-          .start(destinationId)
-          .then((value) {
-            saveString(destinationIdString, destinationId);
-            // Successfully started tempo tracking
+      // Tempo requires this app's own foreground service to be started and linked
+      // before it can start - see ForegroundService and BluedotTrackingService.kt.
+      ForegroundService.start().then((_) {
+        return BluedotPointSdk.instance.tempoBuilder().start(destinationId);
+      }).then((value) {
+        saveString(destinationIdString, destinationId);
+        // Successfully started tempo tracking
         _updateTempoStatus();
       }).catchError((error) {
         // Failed to start tempo tracking, handle error here
@@ -76,6 +70,11 @@ class _TempoPageState extends State<TempoPage> {
       // Successfully stopped tempo tracking
       Future.delayed(const Duration(milliseconds: 500), () {
         _updateTempoStatus();
+      });
+      // Stopping the service unlinks it, which would also stop GeoTriggering's
+      // low-latency mode.
+      BluedotPointSdk.instance.isGeoTriggeringRunning().then((isGeoTriggeringRunning) {
+        if (!isGeoTriggeringRunning) ForegroundService.stop();
       });
     }).catchError((error) {
       // Failed to stop tempo tracking, handle error here
@@ -108,7 +107,14 @@ class _TempoPageState extends State<TempoPage> {
         case TempoEvents.tempoTrackingStoppedWithError:
           var errorCode = args['code'];
           var errorMessage = args['message'];
-          showAlert(tempoAlertTitle, 'Tempo Tracking Stopped With Error: $errorCode $errorMessage', context);
+          var isForegroundServiceNotLinked = args['isForegroundServiceNotLinked'] == true;
+          showAlert(
+            tempoAlertTitle,
+            isForegroundServiceNotLinked
+                ? 'Tempo Tracking Stopped: the foreground service is no longer linked'
+                : 'Tempo Tracking Stopped With Error: $errorCode $errorMessage',
+            context,
+          );
           Future.delayed(const Duration(milliseconds: 500), () {
             _updateTempoStatus();
           });
