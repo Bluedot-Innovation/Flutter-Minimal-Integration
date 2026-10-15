@@ -12,16 +12,20 @@ packages:
   bluedot_point_sdk:
     dependency: "direct main"
     description:
-      path: "../PointSDK-Flutter-Plugin"
-      relative: true
-    source: path
+      path: "."
+      ref: "ak/BD-8389"
+      resolved-ref: c0a9bd6a1fed1937082f8d55fed23cbb7941ee6a
+      url: "git@github.com:Bluedot-Innovation/PointSDK-Flutter-Plugin.git"
+    source: git
     version: "3.0.0"
   bluedot_point_sdk_push:
     dependency: "direct main"
     description:
-      path: "../PointSDK-Flutter-Plugin/PointSDK-Flutter-Push"
-      relative: true
-    source: path
+      path: PointSDK-Flutter-Push
+      ref: "ak/BD-8389"
+      resolved-ref: c0a9bd6a1fed1937082f8d55fed23cbb7941ee6a
+      url: "git@github.com:Bluedot-Innovation/PointSDK-Flutter-Plugin.git"
+    source: git
     version: "2.0.0"
   boolean_selector:
     dependency: transitive
