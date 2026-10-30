@@ -42,5 +42,13 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- App-owned foreground service (see BluedotTrackingService.kt). Since Point SDK
+             19.0.0 the SDK no longer starts/owns a foreground service or notification; the
+             host app must declare, start, and link its own. -->
+        <service
+            android:name=".BluedotTrackingService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
     </application>
 </manifest>
