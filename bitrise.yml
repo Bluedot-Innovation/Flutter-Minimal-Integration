@@ -24,7 +24,11 @@ workflows:
                 #!/usr/bin/env bash
                 set -euo pipefail
                 flutter config --enable-swift-package-manager
-      - cache-pull@2: {}
+      - restore-cache@3:
+          inputs:
+            - key: |-
+                {{ .OS }}-{{ .Arch }}-flutter-{{ checksum "pubspec.lock" }}
+                {{ .OS }}-{{ .Arch }}-flutter-
       - set-java-version@1:
           inputs:
             - set_java_version: '21'
@@ -166,7 +170,13 @@ workflows:
             - compile_bitcode: 'no'
             - upload_bitcode: 'no'
             - distribution_method: ad-hoc
-      - cache-push@2: {}
+      - save-cache@1:
+          inputs:
+            - key: '{{ .OS }}-{{ .Arch }}-flutter-{{ checksum "pubspec.lock" }}'
+            - paths: |-
+                $HOME/.pub-cache
+                $HOME/.gradle/caches
+                $HOME/.gradle/wrapper
       - deploy-to-bitrise-io@2:
           inputs:
             - is_enable_public_page: 'false'
@@ -202,7 +212,11 @@ workflows:
     steps:
       - activate-ssh-key@4: {}
       - git-clone@8: {}
-      - cache-pull@2: {}
+      - restore-cache@3:
+          inputs:
+            - key: |-
+                {{ .OS }}-{{ .Arch }}-flutter-{{ checksum "pubspec.lock" }}
+                {{ .OS }}-{{ .Arch }}-flutter-
       - set-java-version@1:
           inputs:
             - set_java_version: '21'
@@ -308,7 +322,13 @@ workflows:
             - app_id: "$APPSTORE_ID"
             - distribute_external: 'no'
             - groups: "$APP_STORE_INTERNAL_TESTERS"
-      - cache-push@2: {}
+      - save-cache@1:
+          inputs:
+            - key: '{{ .OS }}-{{ .Arch }}-flutter-{{ checksum "pubspec.lock" }}'
+            - paths: |-
+                $HOME/.pub-cache
+                $HOME/.gradle/caches
+                $HOME/.gradle/wrapper
       - deploy-to-bitrise-io@2:
           inputs:
             - is_enable_public_page: 'false'
@@ -343,7 +363,11 @@ workflows:
     steps:
       - activate-ssh-key@4: {}
       - git-clone@8: {}
-      - cache-pull@2: {}
+      - restore-cache@3:
+          inputs:
+            - key: |-
+                {{ .OS }}-{{ .Arch }}-flutter-{{ checksum "pubspec.lock" }}
+                {{ .OS }}-{{ .Arch }}-flutter-
       - set-java-version@1:
           inputs:
             - set_java_version: '21'
@@ -449,7 +473,13 @@ workflows:
             - app_id: "$APPSTORE_ID"
             - distribute_external: 'no'
             - groups: "$APP_STORE_INTERNAL_TESTERS"
-      - cache-push@2: {}
+      - save-cache@1:
+          inputs:
+            - key: '{{ .OS }}-{{ .Arch }}-flutter-{{ checksum "pubspec.lock" }}'
+            - paths: |-
+                $HOME/.pub-cache
+                $HOME/.gradle/caches
+                $HOME/.gradle/wrapper
       - deploy-to-bitrise-io@2:
           inputs:
             - is_enable_public_page: 'false'
