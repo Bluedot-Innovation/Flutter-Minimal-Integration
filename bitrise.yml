@@ -12,9 +12,18 @@ workflows:
     steps:
       - activate-ssh-key@4: {}
       - git-clone@8: {}
-      - flutter-installer@0:
+      - flutter-installer@1:
           inputs:
+            - is_update: 'false'
+            - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.44.0-stable.zip
             - is_debug: 'true'
+      - script@1:
+          title: Enable Flutter Swift Package Manager integration
+          inputs:
+            - content: |-
+                #!/usr/bin/env bash
+                set -euo pipefail
+                flutter config --enable-swift-package-manager
       - cache-pull@2: {}
       - set-java-version@1:
           inputs:
@@ -32,14 +41,21 @@ workflows:
           inputs:
             - content: |
                 #!/usr/bin/env bash
-                
-                echo $FLUTTER_PLUGIN_GIT_REPO
-                echo $BITRISE_GIT_TAG
+                set -euo pipefail
+
+                : "${FLUTTER_PLUGIN_GIT_REPO:?FLUTTER_PLUGIN_GIT_REPO must be set}"
+                : "${BITRISE_GIT_TAG:?BITRISE_GIT_TAG must be set}"
+
+                echo "$FLUTTER_PLUGIN_GIT_REPO"
+                echo "$BITRISE_GIT_TAG"
                 
                 # The core package lives at the repository root.
                 yq -i e '.dependencies.bluedot_point_sdk = null' pubspec.yaml
                 REPO=$FLUTTER_PLUGIN_GIT_REPO yq -i e '.dependencies.bluedot_point_sdk.git.url = strenv(REPO)' pubspec.yaml
                 TAG=$BITRISE_GIT_TAG yq -i e '.dependencies.bluedot_point_sdk.git.ref = strenv(TAG)' pubspec.yaml
+                yq -i e '.dependency_overrides.bluedot_point_sdk = null' pubspec.yaml
+                REPO=$FLUTTER_PLUGIN_GIT_REPO yq -i e '.dependency_overrides.bluedot_point_sdk.git.url = strenv(REPO)' pubspec.yaml
+                TAG=$BITRISE_GIT_TAG yq -i e '.dependency_overrides.bluedot_point_sdk.git.ref = strenv(TAG)' pubspec.yaml
 
                 # The push module lives in a subdirectory of the same repository and tag.
                 # Without the path, pub looks for a pubspec.yaml at the repository root
@@ -49,6 +65,7 @@ workflows:
                 REPO=$FLUTTER_PLUGIN_GIT_REPO yq -i e '.dependencies.bluedot_point_sdk_push.git.url = strenv(REPO)' pubspec.yaml
                 TAG=$BITRISE_GIT_TAG yq -i e '.dependencies.bluedot_point_sdk_push.git.ref = strenv(TAG)' pubspec.yaml
                 yq -i e '.dependencies.bluedot_point_sdk_push.git.path = "PointSDK-Flutter-Push"' pubspec.yaml
+                yq e '.' pubspec.yaml >/dev/null
       - script@1:
           title: run flutter pub get
           inputs:
@@ -192,8 +209,15 @@ workflows:
       - flutter-installer@1:
           inputs:
             - is_update: 'false'
-            - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.41.7-stable.zip
+            - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.44.0-stable.zip
             - is_debug: 'true'
+      - script@1:
+          title: Enable Flutter Swift Package Manager integration
+          inputs:
+            - content: |-
+                #!/usr/bin/env bash
+                set -euo pipefail
+                flutter config --enable-swift-package-manager
       - script@1:
           title: Install yq
           inputs:
@@ -326,8 +350,15 @@ workflows:
       - flutter-installer@1:
           inputs:
             - is_update: 'false'
-            - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.41.7-stable.zip
+            - installation_bundle_url: https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.44.0-stable.zip
             - is_debug: 'true'
+      - script@1:
+          title: Enable Flutter Swift Package Manager integration
+          inputs:
+            - content: |-
+                #!/usr/bin/env bash
+                set -euo pipefail
+                flutter config --enable-swift-package-manager
       - script@1:
           title: Install yq
           inputs:

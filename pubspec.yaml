@@ -16,6 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 2.2.0
 environment:
   sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.44.0"
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -27,16 +28,26 @@ dependencies:
     sdk: flutter
   permission_handler: ^12.0.1
   shared_preferences: ^2.5.4
-  # Published on pub.dev. This is how a real integrating app should depend on the
-  # plugin: no git refs, no dependency_overrides.
-  bluedot_point_sdk: ^2.2.0
+  bluedot_point_sdk:
+    git:
+      url: git@github.com:Bluedot-Innovation/PointSDK-Flutter-Plugin.git
+      ref: nk/BD-8634-cocoapod-deprecation
 
   # Optional push notifications module — requires PUSH_ENABLED=true at build time.
-  bluedot_point_sdk_push: ^1.0.0
+  bluedot_point_sdk_push:
+    git:
+      url: git@github.com:Bluedot-Innovation/PointSDK-Flutter-Plugin.git
+      ref: nk/BD-8634-cocoapod-deprecation
+      path: PointSDK-Flutter-Push
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+dependency_overrides:
+  bluedot_point_sdk:
+    git:
+      url: git@github.com:Bluedot-Innovation/PointSDK-Flutter-Plugin.git
+      ref: nk/BD-8634-cocoapod-deprecation
 dev_dependencies:
   flutter_test:
     sdk: flutter
