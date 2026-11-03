@@ -14,10 +14,15 @@ Notifications appear like any other iOS or Android notification, and open the ap
 Every notification received or tapped is listed on the **Push Notifications** screen, along with the
 campaign, zone and time it arrived.
 
-## Updated Point SDK
+## Flutter plugin integration
 
-The app now runs Bluedot Point SDK **18.1.0** on iOS and **18.0.0** on Android, which introduces
-support for location-triggered push notifications.
+The app now integrates `bluedot_point_sdk` **3.0.0** and `bluedot_point_sdk_push` **2.0.0** using
+Flutter **3.44 or newer**. On iOS, the plugins are integrated through Flutter's Swift Package
+Manager support while unsupported plugins remain managed by CocoaPods.
+
+PointSDK **19.0.0** is not yet available from its configured package URL. This migration is
+currently validated against the Flutter plugins' temporary PointSDK **18.1.0** pins; PointSDK
+19.0.0 release acceptance remains blocked until that package resolves and validation is rerun.
 
 ## Requirements
 
