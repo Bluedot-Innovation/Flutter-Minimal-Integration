@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_minimal_integration/helpers/shared_preferences.dart';
 import 'helpers/constants.dart';
+import 'helpers/foreground_service.dart';
 import 'helpers/show_alert.dart';
 
 // ---------------------------------------------------------------------------
@@ -153,36 +154,29 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
   }
 
   void _startGeoTriggeringNotification() {
-    if (Platform.isIOS) {
-      BluedotPointSdk.instance
-          .geoTriggeringBuilder()
-          .iosNotification('Restart Bluedot Service', 'Restart')
-          .start()
-          .then((_) => _updateGeoTriggeringStatus())
-          .catchError((error) {
-        _showError('Fail to start geo triggering with notification', error);
-      });
-    } else {
-      BluedotPointSdk.instance
-          .geoTriggeringBuilder()
-          .androidNotification(
-            bluedotChannelId,
-            bluedotChannelName,
-            'Bluedot Foreground Service - Geo-triggering',
-            'This app is running a foreground service using location service',
-            123,
-          )
-          .start()
-          .then((_) => _updateGeoTriggeringStatus())
-          .catchError((error) {
-        _showError('Fail to start geo triggering with notification', error);
-      });
-    }
+    // Start and link this app's own foreground service first so the ongoing
+    // notification is shown and GeoTriggering runs in low-latency mode. This is
+    // optional for GeoTriggering — see ForegroundService doc comment.
+    ForegroundService.start().then((_) {
+      final builder = BluedotPointSdk.instance.geoTriggeringBuilder();
+      if (Platform.isIOS) {
+        builder.iosNotification('Restart Bluedot Service', 'Restart');
+      }
+      return builder.start();
+    }).then((_) {
+      _updateGeoTriggeringStatus();
+    }).catchError((error) {
+      _showError('Fail to start geo triggering with foreground service', error);
+    });
   }
 
   void _stopGeoTriggering() {
     BluedotPointSdk.instance.stopGeoTriggering().then((_) {
       _updateGeoTriggeringStatus();
+      // Stopping the service unlinks it, which would also stop Tempo.
+      BluedotPointSdk.instance.isTempoRunning().then((isTempoRunning) {
+        if (!isTempoRunning) ForegroundService.stop();
+      });
     }).catchError((error) {
       _showError('Fail to stop geo triggering', error);
     });
@@ -252,7 +246,7 @@ class _GeoTriggeringPageState extends State<GeoTriggeringPage> {
                 if (!_isGeoTriggeringRunning) ...[
                   ElevatedButton(
                     onPressed: _startGeoTriggeringNotification,
-                    child: const Text('Start with notification'),
+                    child: const Text('Start with foreground service'),
                   ),
                   const SizedBox(height: 4),
                   ElevatedButton(
