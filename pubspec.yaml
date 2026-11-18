@@ -26,7 +26,7 @@ dependencies:
   flutter:
     sdk: flutter
   permission_handler: ^12.0.1
-  shared_preferences: ^2.5.4
+  shared_preferences: ^2.5.3
   # Published on pub.dev. This is how a real integrating app should depend on the
   # plugin: no git refs, no dependency_overrides.
   # bluedot_point_sdk: ^2.2.0
@@ -37,14 +37,14 @@ dependencies:
   # bluedot_point_sdk 3.0.0 is published.
   bluedot_point_sdk:
     git:
-      url: git@github.com:Bluedot-Innovation/PointSDK-Flutter-Plugin.git
-      ref: ak/BD-8389
+      url: https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git
+      ref: dev/3.0.0
 
   # Optional push notifications module — requires PUSH_ENABLED=true at build time.
   # bluedot_point_sdk_push: ^2.0.0
   bluedot_point_sdk_push:
     git:
-      url: git@github.com:Bluedot-Innovation/PointSDK-Flutter-Plugin.git
+      url: https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git
       ref: ak/BD-8389
       path: PointSDK-Flutter-Push
 
@@ -62,8 +62,8 @@ dev_dependencies:
 dependency_overrides:
   bluedot_point_sdk:
     git:
-      url: git@github.com:Bluedot-Innovation/PointSDK-Flutter-Plugin.git
-      ref: ak/BD-8389
+      url: https://github.com/Bluedot-Innovation/PointSDK-Flutter-Plugin.git
+      ref: dev/3.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
